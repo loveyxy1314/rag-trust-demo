@@ -107,7 +107,11 @@ python -m venv .venv
 # Linux / macOS 激活虚拟环境：
 # source .venv/bin/activate
 
-pip install -r requirements.txt
+# 如仅运行离线验证（pytest、quick_demo 与哈希校验），使用国内源仅需 3 个核心包（约 5 秒）：
+pip install -i https://pypi.tuna.tsinghua.edu.cn/simple PyYAML numpy pytest
+
+# 如需同时运行图表重绘脚本（analyze_results.py），安装完整依赖：
+pip install -i https://pypi.tuna.tsinghua.edu.cn/simple -r requirements.txt
 ```
 
 ### 2.2 完整 GPU 推理环境说明（AMD ROCm 实测配置）
