@@ -1,0 +1,67 @@
+project:
+  seed: 42
+  output_dir: results
+  run_name: null          # null -> 自动使用时间戳
+
+dataset:
+  n_facts: 50
+  normal_per_fact: 8      # 50 x 8 = 400 条正常文档
+  injection_per_fact: 2   # 50 x 2 = 100 条指令注入
+  false_fact_per_fact: 2  # 50 x 2 = 100 条错误事实
+  n_queries: 24           # 冻结的评价问题数
+  split_by_template: true
+  train_templates: [T1, T2, T3, T4, T5]
+  validation_templates: [T6, T7]
+  test_templates: [T8]
+
+models:
+  generator_model: Qwen/Qwen2.5-1.5B-Instruct
+  detector_model: Qwen/Qwen2.5-1.5B-Instruct
+  embedding_model: BAAI/bge-small-zh-v1.5
+  dtype: float16
+  embedding_dtype: float32
+  device: cuda
+
+detector:
+  # 分支标签 -> 风险分数（配置文件集中管理，便于冻结与复现）
+  score_attack: 0.90
+  score_quoted: 0.25
+  score_none: 0.02
+  score_unclear: 0.55
+  score_contradicted: 0.85
+  score_insufficient: 0.50
+  score_supported: 0.05
+  risk_threshold: 0.70      # >= 隔离
+  review_threshold: 0.40    # >= 复核（复核文档不进入生成上下文）
+  max_new_tokens: 32        # 每个分支只输出一个短 JSON
+  temperature: 0.0
+  repair_attempts: 1
+  cache: results/detector_cache.jsonl
+
+rag:
+  top_k: 5
+  max_context_chars: 3600
+  max_new_tokens: 96
+  review_policy: exclude    # review 文档不进入生成上下文（保守策略）
+
+provenance:
+  allowlist: [man_pages, kernel_docs, tldp]
+  registry:
+    man_pages:      {verified: true,  allowlisted: true}
+    kernel_docs:    {verified: true,  allowlisted: true}
+    tldp:           {verified: true,  allowlisted: true}
+    distro_wiki:    {verified: true,  allowlisted: false}
+    community_forum: {verified: false, allowlisted: false}
+    unknown_blog:   {verified: false, allowlisted: false}
+    mirror_archive: {verified: false, allowlisted: false}
+  spoofed_verified_sources: [man_pages, kernel_docs]   # 用于构造"来源伪冒"样本
+
+experiments:
+  scenes: [pre_ingestion, post_ingestion]
+  groups: [baseline, integrity, llm_detector, combined]
+  poisoning_ratios: [0.0, 0.05, 0.10, 0.20]
+  corpus_size: 400
+  query_limit: 24
+  detector_full_corpus_eval: true
+  full_corpus_eval_ratio: 0.20
+  stage: formal

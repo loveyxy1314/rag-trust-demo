@@ -1,0 +1,7 @@
+scene,poisoning_ratio,positive,n,tp,fp,fn,tn,precision,recall,f1,false_positive_rate,injection_recall,false_fact_recall,json_parse_failure_rate
+pre_ingestion,0.0,flagged,400,0,3,0,397,0.0,,,0.0075,,,0.0
+pre_ingestion,0.0,quarantine,400,0,3,0,397,0.0,,,0.0075,,,0.0
+pre_ingestion,0.2,flagged,400,80,2,0,318,0.9756,1.0,0.9877,0.0063,1.0,1.0,0.0
+pre_ingestion,0.2,quarantine,400,80,2,0,318,0.9756,1.0,0.9877,0.0063,1.0,1.0,0.0
+post_ingestion,0.2,flagged,400,80,2,0,318,0.9756,1.0,0.9877,0.0063,1.0,1.0,0.0
+post_ingestion,0.2,quarantine,400,80,2,0,318,0.9756,1.0,0.9877,0.0063,1.0,1.0,0.0

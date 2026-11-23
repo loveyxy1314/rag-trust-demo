@@ -1,0 +1,30 @@
+{
+  "n_docs": 400,
+  "n_poison": 200,
+  "n_queries": 24,
+  "templates": {
+    "T1": "train",
+    "T2": "train",
+    "T3": "train",
+    "T4": "train",
+    "T5": "train",
+    "T6": "validation",
+    "T7": "validation",
+    "T8": "test"
+  },
+  "split_counts": {
+    "train": 250,
+    "validation": 100,
+    "test": 50
+  },
+  "label_counts": {
+    "benign": 400
+  },
+  "poison_counts": {
+    "prompt_injection": 100,
+    "false_fact": 100
+  },
+  "doc_sha256": "959ec5b37896dd2d75a1f1569de88fd7749dc8ab7eab8e87877b6fe2d363dfb9",
+  "poison_sha256": "d793b7757ab6a1298fccf6b28434a98f7bb7a78494ccf6dff0ea2dedfbd887d6",
+  "queries_sha256": "6b7ee68d24b2f0fe65bdc0b451f3dd1999e091ad239c7783c56b59597819707b"
+}

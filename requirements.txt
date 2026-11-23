@@ -1,0 +1,10 @@
+# PyTorch 由 AMD 云端镜像提供（ROCm 版），请勿在此文件钉版本或用 pip 覆盖。
+transformers>=4.44
+accelerate>=1.0
+huggingface_hub>=0.24
+PyYAML>=6.0
+numpy>=1.26
+pandas>=2.1
+scikit-learn>=1.4
+matplotlib>=3.8
+pytest>=8.0

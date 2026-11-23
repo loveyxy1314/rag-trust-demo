@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="670" viewBox="0 0 1280 670">
+  <defs>
+    <marker id="arrow-4E79A7" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 1.5 L 10 5 L 0 8.5 z" fill="#4E79A7"/></marker>
+    <marker id="arrow-59A14F" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 1.5 L 10 5 L 0 8.5 z" fill="#59A14F"/></marker>
+    <marker id="arrow-D4A017" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 1.5 L 10 5 L 0 8.5 z" fill="#D4A017"/></marker>
+    <marker id="arrow-E15759" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 1.5 L 10 5 L 0 8.5 z" fill="#E15759"/></marker>
+  </defs>
+  <rect x="0" y="0" width="1280" height="670" fill="#FFFFFF"/>
+  <text x="640.0" y="33" text-anchor="middle" font-family="Microsoft YaHei, PingFang SC, Helvetica, Arial, sans-serif" font-size="18" font-weight="700" fill="#1D3557">图 3  威胁模型与入库前后（Pre vs Post Ingestion）投毒对照流程图</text>
+  <text x="640.0" y="56" text-anchor="middle" font-family="Microsoft YaHei, PingFang SC, Helvetica, Arial, sans-serif" font-size="11.5" fill="#5A626A">受控对照实验设计：区分字节级篡改（post）与供应链入库前污染（pre）对三层防护的不同可观测性</text>
+  <rect x="28" y="80" width="346" height="528" rx="6" ry="6" fill="#F4F5F7" stroke="#6C757D" stroke-width="1.2" stroke-dasharray="6,4"/>
+  <text x="40" y="100.0" text-anchor="start" font-family="Microsoft YaHei, PingFang SC, Helvetica, Arial, sans-serif" font-size="12" font-weight="700" fill="#2D3436">攻击者能力边界与投毒载荷</text>
+  <rect x="404" y="80" width="848" height="250" rx="6" ry="6" fill="#EDF6EC" stroke="#59A14F" stroke-width="1.4" stroke-dasharray="6,4"/>
+  <text x="416" y="100.0" text-anchor="start" font-family="Microsoft YaHei, PingFang SC, Helvetica, Arial, sans-serif" font-size="12" font-weight="700" fill="#24541E">场景 A：post_ingestion（入库建基线后发生篡改）</text>
+  <rect x="404" y="358" width="848" height="250" rx="6" ry="6" fill="#FDECEC" stroke="#E15759" stroke-width="1.4" stroke-dasharray="6,4"/>
+  <text x="416" y="378.0" text-anchor="start" font-family="Microsoft YaHei, PingFang SC, Helvetica, Arial, sans-serif" font-size="12" font-weight="700" fill="#7F1D1D">场景 B：pre_ingestion（投毒发生在基线建立之前）</text>
+  <rect x="48" y="124" width="306" height="114" rx="8" ry="8" fill="#FDECEC" stroke="#E15759" stroke-width="1.7"/>
+  <text x="60.0" y="162.1" text-anchor="start" font-family="Microsoft YaHei, PingFang SC, Helvetica, Arial, sans-serif" font-size="11" font-weight="700" fill="#7F1D1D">攻击假设（恒定语料规模 400）</text>
+  <text x="60.0" y="177.3" text-anchor="start" font-family="Microsoft YaHei, PingFang SC, Helvetica, Arial, sans-serif" font-size="10.5" font-weight="400" fill="#7F1D1D">• 替换同 doc_id 正常文档（5%/10%/20%）</text>
+  <text x="60.0" y="192.4" text-anchor="start" font-family="Microsoft YaHei, PingFang SC, Helvetica, Arial, sans-serif" font-size="10.5" font-weight="400" fill="#7F1D1D">• 可伪造声明式 source（如 man_pages）</text>
+  <text x="60.0" y="207.6" text-anchor="start" font-family="Microsoft YaHei, PingFang SC, Helvetica, Arial, sans-serif" font-size="10.5" font-weight="400" fill="#7F1D1D">• 不可篡改已落盘基线清单与评价真值</text>
+  <rect x="48" y="266" width="306" height="110" rx="8" ry="8" fill="#FEF3E6" stroke="#F28E2B" stroke-width="1.8"/>
+  <text x="60.0" y="302.1" text-anchor="start" font-family="Microsoft YaHei, PingFang SC, Helvetica, Arial, sans-serif" font-size="11" font-weight="700" fill="#7A4100">载荷类型 1：提示注入（100 条）</text>
+  <text x="60.0" y="317.3" text-anchor="start" font-family="Microsoft YaHei, PingFang SC, Helvetica, Arial, sans-serif" font-size="10.5" font-weight="400" fill="#7A4100">• I1 定向改写答案指令</text>
+  <text x="60.0" y="332.4" text-anchor="start" font-family="Microsoft YaHei, PingFang SC, Helvetica, Arial, sans-serif" font-size="10.5" font-weight="400" fill="#7A4100">• I2 诱导输出哨兵 RAG_POISON_999</text>
+  <text x="60.0" y="347.6" text-anchor="start" font-family="Microsoft YaHei, PingFang SC, Helvetica, Arial, sans-serif" font-size="10.5" font-weight="400" fill="#7A4100">伪装为技术备注或系统提示</text>
+  <rect x="48" y="404" width="306" height="110" rx="8" ry="8" fill="#FEF3E6" stroke="#F28E2B" stroke-width="1.8"/>
+  <text x="60.0" y="440.1" text-anchor="start" font-family="Microsoft YaHei, PingFang SC, Helvetica, Arial, sans-serif" font-size="11" font-weight="700" fill="#7A4100">载荷类型 2：错误技术事实（100 条）</text>
+  <text x="60.0" y="455.3" text-anchor="start" font-family="Microsoft YaHei, PingFang SC, Helvetica, Arial, sans-serif" font-size="10.5" font-weight="400" fill="#7A4100">• F1 / F2 颠倒 Linux 系统调用语义</text>
+  <text x="60.0" y="470.4" text-anchor="start" font-family="Microsoft YaHei, PingFang SC, Helvetica, Arial, sans-serif" font-size="10.5" font-weight="400" fill="#7A4100">（如 fork 返回值、SIGKILL 可捕获等）</text>
+  <text x="60.0" y="485.6" text-anchor="start" font-family="Microsoft YaHei, PingFang SC, Helvetica, Arial, sans-serif" font-size="10.5" font-weight="400" fill="#7A4100">无显式攻击指令，规则词难以拦截</text>
+  <rect x="48" y="534" width="306" height="56" rx="8" ry="8" fill="#FFF7F7" stroke="#CC3311" stroke-width="1.8" stroke-dasharray="6,4"/>
+  <text x="201.0" y="565.9" text-anchor="middle" font-family="Microsoft YaHei, PingFang SC, Helvetica, Arial, sans-serif" font-size="11" font-weight="700" fill="#A61C00">安全边界：攻击者无法触达 evaluation_only</text>
+  <rect x="426" y="134" width="168" height="82" rx="8" ry="8" fill="#EBF2F7" stroke="#4E79A7" stroke-width="1.5"/>
+  <text x="510.0" y="171.1" text-anchor="middle" font-family="Microsoft YaHei, PingFang SC, Helvetica, Arial, sans-serif" font-size="11.5" font-weight="700" fill="#1F3B57">1. 干净语料入库</text>
+  <text x="510.0" y="187.0" text-anchor="middle" font-family="Microsoft YaHei, PingFang SC, Helvetica, Arial, sans-serif" font-size="10.5" font-weight="400" fill="#1F3B57">400 条正常文档</text>
+  <path d="M 626 143 A 89.0 9 0 0 1 804 143 L 804 207 A 89.0 9 0 0 1 626 207 Z" fill="#EDF6EC" stroke="#59A14F" stroke-width="1.6"/>
+  <ellipse cx="715.0" cy="143" rx="89.0" ry="9" fill="#EDF6EC" stroke="#59A14F" stroke-width="1.6"/>
+  <text x="715.0" y="176.1" text-anchor="middle" font-family="Microsoft YaHei, PingFang SC, Helvetica, Arial, sans-serif" font-size="11.5" font-weight="700" fill="#24541E">2. 先建 SHA-256 基线</text>
+  <text x="715.0" y="192.0" text-anchor="middle" font-family="Microsoft YaHei, PingFang SC, Helvetica, Arial, sans-serif" font-size="10.5" font-weight="400" fill="#24541E">记录干净文本摘要</text>
+  <rect x="836" y="134" width="178" height="82" rx="8" ry="8" fill="#FDECEC" stroke="#E15759" stroke-width="1.7"/>
+  <text x="925.0" y="163.2" text-anchor="middle" font-family="Microsoft YaHei, PingFang SC, Helvetica, Arial, sans-serif" font-size="11.5" font-weight="700" fill="#7F1D1D">3. 攻击者替换文档</text>
+  <text x="925.0" y="179.0" text-anchor="middle" font-family="Microsoft YaHei, PingFang SC, Helvetica, Arial, sans-serif" font-size="10.5" font-weight="400" fill="#7F1D1D">文本字节改变</text>
+  <text x="925.0" y="194.9" text-anchor="middle" font-family="Microsoft YaHei, PingFang SC, Helvetica, Arial, sans-serif" font-size="10.5" font-weight="400" fill="#7F1D1D">（同 doc_id 替换）</text>
+  <rect x="1046" y="124" width="184" height="104" rx="8" ry="8" fill="#EDF6EC" stroke="#59A14F" stroke-width="2.0"/>
+  <text x="1138.0" y="157.1" text-anchor="middle" font-family="Microsoft YaHei, PingFang SC, Helvetica, Arial, sans-serif" font-size="11" font-weight="700" fill="#24541E">4. 完整性校验结果</text>
+  <text x="1138.0" y="172.3" text-anchor="middle" font-family="Microsoft YaHei, PingFang SC, Helvetica, Arial, sans-serif" font-size="10.5" font-weight="700" fill="#24541E">100% 检出篡改</text>
+  <text x="1138.0" y="187.4" text-anchor="middle" font-family="Microsoft YaHei, PingFang SC, Helvetica, Arial, sans-serif" font-size="10.5" font-weight="700" fill="#24541E">16/16 · 28/28 · 55/55</text>
+  <text x="1138.0" y="202.6" text-anchor="middle" font-family="Microsoft YaHei, PingFang SC, Helvetica, Arial, sans-serif" font-size="10.5" font-weight="700" fill="#24541E">ASR = 0（无需语义层）</text>
+  <rect x="426" y="244" width="804" height="62" rx="8" ry="8" fill="#EAF5F4" stroke="#76B7B2" stroke-width="1.2"/>
+  <text x="828.0" y="278.9" text-anchor="middle" font-family="Microsoft YaHei, PingFang SC, Helvetica, Arial, sans-serif" font-size="11" font-weight="400" fill="#1F4E4A">关键结论（post_ingestion）：哈希校验对“入库后字节级篡改”零漏报、低开销；20% 投毒下 integrity 组正确率 83.3%（vs baseline 37.5%）。</text>
+  <rect x="426" y="412" width="168" height="82" rx="8" ry="8" fill="#FDECEC" stroke="#E15759" stroke-width="1.7"/>
+  <text x="510.0" y="441.5" text-anchor="middle" font-family="Microsoft YaHei, PingFang SC, Helvetica, Arial, sans-serif" font-size="11.2" font-weight="700" fill="#7F1D1D">1. 投毒文档混入</text>
+  <text x="510.0" y="456.9" text-anchor="middle" font-family="Microsoft YaHei, PingFang SC, Helvetica, Arial, sans-serif" font-size="10.5" font-weight="400" fill="#7F1D1D">同 doc_id 替换</text>
+  <text x="510.0" y="472.4" text-anchor="middle" font-family="Microsoft YaHei, PingFang SC, Helvetica, Arial, sans-serif" font-size="10.5" font-weight="400" fill="#7F1D1D">（含伪造 man_pages）</text>
+  <path d="M 626 421 A 89.0 9 0 0 1 804 421 L 804 485 A 89.0 9 0 0 1 626 485 Z" fill="#FDF9E7" stroke="#D4A017" stroke-width="1.7"/>
+  <ellipse cx="715.0" cy="421" rx="89.0" ry="9" fill="#FDF9E7" stroke="#D4A017" stroke-width="1.7"/>
+  <text x="715.0" y="446.5" text-anchor="middle" font-family="Microsoft YaHei, PingFang SC, Helvetica, Arial, sans-serif" font-size="11.2" font-weight="700" fill="#6B4E00">2. 后建 SHA-256 基线</text>
+  <text x="715.0" y="461.9" text-anchor="middle" font-family="Microsoft YaHei, PingFang SC, Helvetica, Arial, sans-serif" font-size="10.5" font-weight="400" fill="#6B4E00">基线已包含投毒文本</text>
+  <text x="715.0" y="477.4" text-anchor="middle" font-family="Microsoft YaHei, PingFang SC, Helvetica, Arial, sans-serif" font-size="10.5" font-weight="400" fill="#6B4E00">哈希校验检出率 0%</text>
+  <rect x="836" y="412" width="178" height="82" rx="8" ry="8" fill="#FEF3E6" stroke="#F28E2B" stroke-width="2.2"/>
+  <text x="925.0" y="441.5" text-anchor="middle" font-family="Microsoft YaHei, PingFang SC, Helvetica, Arial, sans-serif" font-size="11.2" font-weight="700" fill="#7A4100">3. 来源 + 语义联防</text>
+  <text x="925.0" y="456.9" text-anchor="middle" font-family="Microsoft YaHei, PingFang SC, Helvetica, Arial, sans-serif" font-size="10.5" font-weight="400" fill="#7A4100">来源拦截 31/55 未知源</text>
+  <text x="925.0" y="472.4" text-anchor="middle" font-family="Microsoft YaHei, PingFang SC, Helvetica, Arial, sans-serif" font-size="10.5" font-weight="400" fill="#7A4100">语义拦截 24/55 伪造源</text>
+  <rect x="1046" y="402" width="184" height="104" rx="8" ry="8" fill="#EDF6EC" stroke="#59A14F" stroke-width="1.8"/>
+  <text x="1138.0" y="435.1" text-anchor="middle" font-family="Microsoft YaHei, PingFang SC, Helvetica, Arial, sans-serif" font-size="11" font-weight="700" fill="#24541E">4. 防护结果与代价</text>
+  <text x="1138.0" y="450.3" text-anchor="middle" font-family="Microsoft YaHei, PingFang SC, Helvetica, Arial, sans-serif" font-size="10.5" font-weight="700" fill="#24541E">ASR(被攻击) 65% → 0%</text>
+  <text x="1138.0" y="465.4" text-anchor="middle" font-family="Microsoft YaHei, PingFang SC, Helvetica, Arial, sans-serif" font-size="10.5" font-weight="700" fill="#24541E">代价：14 条正常</text>
+  <text x="1138.0" y="480.6" text-anchor="middle" font-family="Microsoft YaHei, PingFang SC, Helvetica, Arial, sans-serif" font-size="10.5" font-weight="700" fill="#24541E">distro_wiki 被转复核</text>
+  <rect x="426" y="522" width="804" height="62" rx="8" ry="8" fill="#FFF7F7" stroke="#CC3311" stroke-width="1.4" stroke-dasharray="6,4"/>
+  <text x="828.0" y="556.9" text-anchor="middle" font-family="Microsoft YaHei, PingFang SC, Helvetica, Arial, sans-serif" font-size="11" font-weight="400" fill="#A61C00">关键结论（pre_ingestion）：SHA-256 无法发现入库前投毒（integrity 组与 baseline 完全一致，ASR 65%）；必须依赖来源与内容级语义检测互补。</text>
+  <path d="M 594.0 175.0 L 626.0 175.0" fill="none" stroke="#4E79A7" stroke-width="1.6" marker-end="url(#arrow-4E79A7)"/>
+  <path d="M 804.0 175.0 L 836.0 175.0" fill="none" stroke="#E15759" stroke-width="1.6" marker-end="url(#arrow-E15759)"/>
+  <rect x="791.2" y="156.0" width="57.5" height="16" rx="3" fill="#FFFFFF" fill-opacity="0.92"/>
+  <text x="820.0" y="168.0" text-anchor="middle" font-family="Microsoft YaHei, PingFang SC, Helvetica, Arial, sans-serif" font-size="10.5" font-weight="600" fill="#E15759">入库后篡改</text>
+  <path d="M 1014.0 175.0 L 1046.0 176.0" fill="none" stroke="#59A14F" stroke-width="1.8" marker-end="url(#arrow-59A14F)"/>
+  <rect x="977.5" y="156.5" width="105.0" height="16" rx="3" fill="#FFFFFF" fill-opacity="0.92"/>
+  <text x="1030.0" y="168.5" text-anchor="middle" font-family="Microsoft YaHei, PingFang SC, Helvetica, Arial, sans-serif" font-size="10.5" font-weight="600" fill="#59A14F">SHA-256 失败</text>
+  <path d="M 594.0 453.0 L 626.0 453.0" fill="none" stroke="#E15759" stroke-width="1.6" marker-end="url(#arrow-E15759)"/>
+  <path d="M 804.0 453.0 L 836.0 453.0" fill="none" stroke="#D4A017" stroke-width="1.6" marker-end="url(#arrow-D4A017)"/>
+  <rect x="786.5" y="434.0" width="67.0" height="16" rx="3" fill="#FFFFFF" fill-opacity="0.92"/>
+  <text x="820.0" y="446.0" text-anchor="middle" font-family="Microsoft YaHei, PingFang SC, Helvetica, Arial, sans-serif" font-size="10.5" font-weight="600" fill="#D4A017">哈希全部放行</text>
+  <path d="M 1014.0 453.0 L 1046.0 454.0" fill="none" stroke="#59A14F" stroke-width="1.8" marker-end="url(#arrow-59A14F)"/>
+  <rect x="1006.0" y="434.5" width="48.0" height="16" rx="3" fill="#FFFFFF" fill-opacity="0.92"/>
+  <text x="1030.0" y="446.5" text-anchor="middle" font-family="Microsoft YaHei, PingFang SC, Helvetica, Arial, sans-serif" font-size="10.5" font-weight="600" fill="#59A14F">全部隔离</text>
+  <path d="M 354.0 321.0 L 388.0 321.0 L 388.0 108.0 L 925.0 108.0 L 925.0 134.0" fill="none" stroke="#E15759" stroke-width="1.4" stroke-dasharray="6,4" marker-end="url(#arrow-E15759)"/>
+  <rect x="632.5" y="89.0" width="48.0" height="16" rx="3" fill="#FFFFFF" fill-opacity="0.92"/>
+  <text x="656.5" y="101.0" text-anchor="middle" font-family="Microsoft YaHei, PingFang SC, Helvetica, Arial, sans-serif" font-size="10.5" font-weight="600" fill="#E15759">注入载荷</text>
+  <path d="M 354.0 459.0 L 388.0 459.0 L 388.0 453.0 L 426.0 453.0" fill="none" stroke="#E15759" stroke-width="1.5" stroke-dasharray="6,4" marker-end="url(#arrow-E15759)"/>
+  <rect x="383.0" y="434.0" width="48.0" height="16" rx="3" fill="#FFFFFF" fill-opacity="0.92"/>
+  <text x="407.0" y="446.0" text-anchor="middle" font-family="Microsoft YaHei, PingFang SC, Helvetica, Arial, sans-serif" font-size="10.5" font-weight="600" fill="#E15759">投毒入库</text>
+  <line x1="28" y1="622" x2="1252" y2="622" stroke="#DEE2E6" stroke-width="1"/>
+  <rect x="34" y="634" width="22" height="14" rx="3" fill="#EBF2F7" stroke="#4E79A7" stroke-width="1.5"/>
+  <text x="63" y="645" text-anchor="start" font-family="Microsoft YaHei, PingFang SC, Helvetica, Arial, sans-serif" font-size="11" fill="#2D3436">正常语料状态</text>
+  <rect x="236" y="634" width="22" height="14" rx="3" fill="#FDECEC" stroke="#E15759" stroke-width="1.5"/>
+  <text x="265" y="645" text-anchor="start" font-family="Microsoft YaHei, PingFang SC, Helvetica, Arial, sans-serif" font-size="11" fill="#2D3436">攻击 / 投毒篡改</text>
+  <rect x="438" y="634" width="22" height="14" rx="3" fill="#FDF9E7" stroke="#D4A017" stroke-width="1.5"/>
+  <text x="467" y="645" text-anchor="start" font-family="Microsoft YaHei, PingFang SC, Helvetica, Arial, sans-serif" font-size="11" fill="#2D3436">基线失效状态（pre）</text>
+  <rect x="640" y="634" width="22" height="14" rx="3" fill="#FEF3E6" stroke="#F28E2B" stroke-width="1.5"/>
+  <text x="669" y="645" text-anchor="start" font-family="Microsoft YaHei, PingFang SC, Helvetica, Arial, sans-serif" font-size="11" fill="#2D3436">载荷与核心防御层</text>
+  <rect x="842" y="634" width="22" height="14" rx="3" fill="#EDF6EC" stroke="#59A14F" stroke-width="1.5"/>
+  <text x="871" y="645" text-anchor="start" font-family="Microsoft YaHei, PingFang SC, Helvetica, Arial, sans-serif" font-size="11" fill="#2D3436">成功检出与阻断</text>
+  <rect x="1044" y="634" width="22" height="14" rx="3" fill="#FFF7F7" stroke="#CC3311" stroke-width="1.5" stroke-dasharray="4,3"/>
+  <text x="1073" y="645" text-anchor="start" font-family="Microsoft YaHei, PingFang SC, Helvetica, Arial, sans-serif" font-size="11" fill="#2D3436">核心安全边界提示</text>
+</svg>

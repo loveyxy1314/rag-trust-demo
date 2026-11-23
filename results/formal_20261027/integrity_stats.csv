@@ -1,0 +1,17 @@
+scene,poisoning_ratio,group,n_tampered,tampered_retrievals,integrity_failed,integrity_fail_rate,total_quarantined,total_quarantine_rate
+post_ingestion,0.0,integrity,0,0,0,,0,
+post_ingestion,0.0,combined,0,0,0,,0,
+post_ingestion,0.05,integrity,20,16,16,1.0,16,1.0
+post_ingestion,0.05,combined,20,16,16,1.0,16,1.0
+post_ingestion,0.1,integrity,40,28,28,1.0,28,1.0
+post_ingestion,0.1,combined,40,28,28,1.0,28,1.0
+post_ingestion,0.2,integrity,80,55,55,1.0,55,1.0
+post_ingestion,0.2,combined,80,55,55,1.0,55,1.0
+pre_ingestion,0.0,integrity,0,0,0,,0,
+pre_ingestion,0.0,combined,0,0,0,,0,
+pre_ingestion,0.05,integrity,20,16,0,0.0,0,0.0
+pre_ingestion,0.05,combined,20,16,0,0.0,7,0.4375
+pre_ingestion,0.1,integrity,40,28,0,0.0,0,0.0
+pre_ingestion,0.1,combined,40,28,0,0.0,13,0.4643
+pre_ingestion,0.2,integrity,80,55,0,0.0,0,0.0
+pre_ingestion,0.2,combined,80,55,0,0.0,24,0.4364

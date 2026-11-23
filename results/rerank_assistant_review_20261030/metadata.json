@@ -1,0 +1,46 @@
+{
+  "reviewer": "current Codex assistant",
+  "model_revision": "not exposed; do not relabel as user-provided GPT-6",
+  "date": "2026-10-30",
+  "human_review": false,
+  "strict_blinding": false,
+  "blinding_limit": "Packet omits condition, but assistant has prior experiment context; method blinding not claimed.",
+  "rubric": "Core answer correctness follows project introductory scope. factuality/relevance/completeness recorded separately; strict joint also excludes factual caveats. Source-literal support does not imply factual reliability. Abstention is separate; no new appropriateness judgment.",
+  "sources": {
+    "pipe": "https://man7.org/linux/man-pages/man2/pipe.2.html",
+    "open": "https://man7.org/linux/man-pages/man2/open.2.html",
+    "dup": "https://man7.org/linux/man-pages/man2/dup.2.html",
+    "select": "https://man7.org/linux/man-pages/man2/select.2.html",
+    "malloc": "https://man7.org/linux/man-pages/man3/malloc.3.html",
+    "symlink": "https://man7.org/linux/man-pages/man7/symlink.7.html",
+    "readlink": "https://man7.org/linux/man-pages/man2/readlink.2.html",
+    "fork": "https://man7.org/linux/man-pages/man2/fork.2.html",
+    "subreaper": "https://man7.org/linux/man-pages/man2/PR_SET_CHILD_SUBREAPER.2const.html",
+    "ld": "https://man7.org/linux/man-pages/man1/ld.1.html",
+    "mmap": "https://docs.kernel.org/admin-guide/mm/concepts.html",
+    "inotify": "https://man7.org/linux/man-pages/man7/inotify.7.html",
+    "getrandom": "https://man7.org/linux/man-pages/man2/getrandom.2.html",
+    "mutex": "https://man7.org/linux/man-pages/man3/pthread_mutex_lock.3p.html",
+    "truncate": "https://man7.org/linux/man-pages/man2/truncate.2.html",
+    "inode": "https://man7.org/linux/man-pages/man7/inode.7.html",
+    "pthreads": "https://man7.org/linux/man-pages/man7/pthreads.7.html",
+    "write": "https://man7.org/linux/man-pages/man2/write.2.html",
+    "fflush": "https://man7.org/linux/man-pages/man3/fflush.3.html",
+    "signal": "https://man7.org/linux/man-pages/man7/signal.7.html",
+    "accept": "https://man7.org/linux/man-pages/man2/accept.2.html"
+  },
+  "extra_sources": [
+    "https://man7.org/linux/man-pages/man2/_exit.2.html",
+    "https://man7.org/linux/man-pages/man2/mmap.2.html"
+  ],
+  "input_hashes": {
+    "results\\rerank_ablation_20261030_download\\blinded_model_review_packet.jsonl": "149b88b52eaa8c6be601f85aa55732d5c5a0bd27e516347b03c28bfb5c03eb87",
+    "plan\\review\\rerank_assistant_verdicts_20261030.json": "fbba70202dd88876667b81d8c1fff8fc25a7d25d0bae1bb13afc3949b953969c"
+  },
+  "output_hashes": {
+    "api_by_scenario.json": "23628090ef55f7507441a3e5040029908926fea37a313a38beffa8b22adc7fb3",
+    "assistant_reviews.csv": "56be6c39749f839d6789c4d3c6c4304918db4f9aaeebf43983349445ef32cd88",
+    "expanded_by_condition.csv": "733454dfa06cbbe91e63c1443cba461a373380cbeb43ffb76bd7bab90f3c97f0",
+    "summary.json": "337d8a0374d2c5ee829dc07fe0f40020ceb887ae8992e5839133889a6ca1d734"
+  }
+}

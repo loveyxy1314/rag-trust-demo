@@ -1,0 +1,20 @@
+# Python caches and environments
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.venv/
+venv/
+env/
+
+# OS and editor artifacts
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Large local archives and transient runtime caches
+*.zip
+results/detector_cache.jsonl
+results/smoke*/
+results/review_20261027/
