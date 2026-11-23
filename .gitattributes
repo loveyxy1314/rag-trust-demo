@@ -1,0 +1,5 @@
+# Preserve exact byte sequences for SHA-256 verified datasets and experiment artifacts
+# across Windows, macOS, Linux clones and GitHub ZIP downloads.
+results/** -text
+plan/** -text
+data/** -text

@@ -13,7 +13,7 @@
 
 ```bash
 # 1. 克隆仓库并进入项目目录
-git clone <repository-url>
+git clone https://github.com/loveyxy1314/rag-trust-demo.git
 cd rag-trust-demo
 
 # 2. 创建虚拟环境并安装核心依赖

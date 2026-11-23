@@ -6,7 +6,7 @@
 
 1. 在干净的虚拟环境中拉取代码并安装依赖：
    ```bash
-   git clone <repository-url>
+   git clone https://github.com/loveyxy1314/rag-trust-demo.git
    cd rag-trust-demo
    python -m venv .venv
    # Windows PowerShell: .venv\Scripts\Activate.ps1

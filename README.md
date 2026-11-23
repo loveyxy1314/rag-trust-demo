@@ -98,7 +98,7 @@ rag-trust-demo/
 适用于代码验证、单元测试、离线端到端演示、独立审计与图表重算：
 
 ```bash
-git clone <repository-url>
+git clone https://github.com/loveyxy1314/rag-trust-demo.git
 cd rag-trust-demo
 python -m venv .venv
 

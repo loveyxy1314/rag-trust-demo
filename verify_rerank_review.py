@@ -46,7 +46,8 @@ def main():
         assert s['correct_core_rate'] == c['correct'] / len(rows)
     meta = json.loads((out / 'metadata.json').read_text(encoding='utf8'))
     for path, sha in meta['input_hashes'].items():
-        assert hashlib.sha256((ROOT / path).read_bytes()).hexdigest() == sha
+        norm_path = ROOT / path.replace('\\', '/')
+        assert hashlib.sha256(norm_path.read_bytes()).hexdigest() == sha
     for name, sha in meta['output_hashes'].items():
         assert hashlib.sha256((out / name).read_bytes()).hexdigest() == sha
     assert meta['human_review'] is False and meta['strict_blinding'] is False
