@@ -1,137 +1,98 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<mxfile host="app.diagrams.net" agent="rag-trust-demo/generate_diagrams.py" version="24.7.17">
-  <diagram id="fig3_threat_model_scenes" name="图 3  威胁模型与入库前后（Pre vs Post Ingestion）投毒对照流程图">
-    <mxGraphModel dx="1200" dy="800" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1280" pageHeight="670" math="0" shadow="0" background="#FFFFFF">
+<mxfile host="app.diagrams.net" agent="rag-trust-demo" version="24.7.17">
+  <diagram id="fig3_threat_model_scenes" name="图3_威胁模型与场景对照">
+    <mxGraphModel dx="1100" dy="650" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1020" pageHeight="416" math="0" shadow="0" background="#FFFFFF">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
-        <mxCell id="title_main" value="&lt;b&gt;图 3  威胁模型与入库前后（Pre vs Post Ingestion）投毒对照流程图&lt;/b&gt;" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=0;strokeColor=none;fillColor=none;fontSize=18;fontColor=#1D3557;fontFamily=Microsoft YaHei, PingFang SC, Helvetica, Arial, sans-serif;" vertex="1" parent="1">
-          <mxGeometry x="20" y="12" width="1240" height="30" as="geometry" />
+        <mxCell id="c_atk" value="攻击者能力与投毒载荷" style="rounded=1;arcSize=4;fillColor=#FAFAFB;strokeColor=#ADB5BD;fontColor=#495057;strokeWidth=1.0;fontSize=10.5;fontFamily=Microsoft YaHei, PingFang SC, Helvetica Neue, Arial, sans-serif;whiteSpace=wrap;html=1;dashed=1;dashPattern=5 3;verticalAlign=top;align=left;spacingTop=5;spacingLeft=9;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="20" y="18" width="250" height="368" as="geometry" />
         </mxCell>
-        <mxCell id="title_sub" value="受控对照实验设计：区分字节级篡改（post）与供应链入库前污染（pre）对三层防护的不同可观测性" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=0;strokeColor=none;fillColor=none;fontSize=11;fontColor=#5A626A;fontFamily=Microsoft YaHei, PingFang SC, Helvetica, Arial, sans-serif;" vertex="1" parent="1">
-          <mxGeometry x="20" y="42" width="1240" height="22" as="geometry" />
+        <mxCell id="c_post" value="(a) post_ingestion：入库建基线后篡改" style="rounded=1;arcSize=4;fillColor=#FAFAFB;strokeColor=#ADB5BD;fontColor=#495057;strokeWidth=1.0;fontSize=10.5;fontFamily=Microsoft YaHei, PingFang SC, Helvetica Neue, Arial, sans-serif;whiteSpace=wrap;html=1;dashed=1;dashPattern=5 3;verticalAlign=top;align=left;spacingTop=5;spacingLeft=9;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="294" y="18" width="706" height="172" as="geometry" />
         </mxCell>
-        <mxCell id="c_atk" value="攻击者能力边界与投毒载荷" style="rounded=1;arcSize=6;fillColor=#F4F5F7;strokeColor=#6C757D;fontColor=#2D3436;strokeWidth=1.2;fontSize=12;fontFamily=Microsoft YaHei, PingFang SC, Helvetica, Arial, sans-serif;whiteSpace=wrap;html=1;fontStyle=1;dashed=1;dashPattern=6 4;verticalAlign=top;align=left;spacingTop=6;spacingLeft=10;" vertex="1" parent="1">
-          <mxGeometry x="28" y="80" width="346" height="528" as="geometry" />
+        <mxCell id="c_pre" value="(b) pre_ingestion：入库前供应链投毒" style="rounded=1;arcSize=4;fillColor=#FAFAFB;strokeColor=#ADB5BD;fontColor=#495057;strokeWidth=1.0;fontSize=10.5;fontFamily=Microsoft YaHei, PingFang SC, Helvetica Neue, Arial, sans-serif;whiteSpace=wrap;html=1;dashed=1;dashPattern=5 3;verticalAlign=top;align=left;spacingTop=5;spacingLeft=9;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="294" y="214" width="706" height="172" as="geometry" />
         </mxCell>
-        <mxCell id="c_post" value="场景 A：post_ingestion（入库建基线后发生篡改）" style="rounded=1;arcSize=6;fillColor=#EDF6EC;strokeColor=#59A14F;fontColor=#24541E;strokeWidth=1.4;fontSize=12;fontFamily=Microsoft YaHei, PingFang SC, Helvetica, Arial, sans-serif;whiteSpace=wrap;html=1;fontStyle=1;dashed=1;dashPattern=6 4;verticalAlign=top;align=left;spacingTop=6;spacingLeft=10;" vertex="1" parent="1">
-          <mxGeometry x="404" y="80" width="848" height="250" as="geometry" />
+        <mxCell id="a1" value="&lt;b&gt;恒定规模同 ID 替换&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:9.5px&quot; color=&quot;#4A5568&quot;&gt;语料恒为 400 条 (5% / 10% / 20%)&lt;/font&gt;&lt;br&gt;&lt;font style=&quot;font-size:9.5px&quot; color=&quot;#4A5568&quot;&gt;可伪造声明式 source 字段&lt;/font&gt;" style="rounded=1;arcSize=6;fillColor=#FFFFFF;strokeColor=#343A40;fontColor=#1A202C;strokeWidth=1.2;fontSize=10.2;fontFamily=Microsoft YaHei, PingFang SC, Helvetica Neue, Arial, sans-serif;whiteSpace=wrap;html=1;align=left;spacingLeft=9;spacingRight=6;" vertex="1" parent="1">
+          <mxGeometry x="36" y="56" width="218" height="78" as="geometry" />
         </mxCell>
-        <mxCell id="c_pre" value="场景 B：pre_ingestion（投毒发生在基线建立之前）" style="rounded=1;arcSize=6;fillColor=#FDECEC;strokeColor=#E15759;fontColor=#7F1D1D;strokeWidth=1.4;fontSize=12;fontFamily=Microsoft YaHei, PingFang SC, Helvetica, Arial, sans-serif;whiteSpace=wrap;html=1;fontStyle=1;dashed=1;dashPattern=6 4;verticalAlign=top;align=left;spacingTop=6;spacingLeft=10;" vertex="1" parent="1">
-          <mxGeometry x="404" y="358" width="848" height="250" as="geometry" />
+        <mxCell id="a2" value="&lt;b&gt;提示注入载荷 (100 条)&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:9.5px&quot; color=&quot;#4A5568&quot;&gt;I1：定向改写技术结论&lt;/font&gt;&lt;br&gt;&lt;font style=&quot;font-size:9.5px&quot; color=&quot;#4A5568&quot;&gt;I2：诱导输出哨兵 RAG_POISON_999&lt;/font&gt;" style="rounded=1;arcSize=6;fillColor=#FDF2F2;strokeColor=#9B2C2C;fontColor=#742A2A;strokeWidth=1.2;fontSize=10.2;fontFamily=Microsoft YaHei, PingFang SC, Helvetica Neue, Arial, sans-serif;whiteSpace=wrap;html=1;align=left;spacingLeft=9;spacingRight=6;" vertex="1" parent="1">
+          <mxGeometry x="36" y="152" width="218" height="74" as="geometry" />
         </mxCell>
-        <mxCell id="atk_cap" value="攻击假设（恒定语料规模 400）&lt;br&gt;• 替换同 doc_id 正常文档（5%/10%/20%）&lt;br&gt;• 可伪造声明式 source（如 man_pages）&lt;br&gt;• 不可篡改已落盘基线清单与评价真值" style="rounded=1;arcSize=12;fillColor=#FDECEC;strokeColor=#E15759;fontColor=#7F1D1D;strokeWidth=1.7;fontSize=11;fontFamily=Microsoft YaHei, PingFang SC, Helvetica, Arial, sans-serif;whiteSpace=wrap;html=1;align=left;spacingLeft=10;spacingRight=8;" vertex="1" parent="1">
-          <mxGeometry x="48" y="124" width="306" height="114" as="geometry" />
+        <mxCell id="a3" value="&lt;b&gt;错误技术事实 (100 条)&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:9.5px&quot; color=&quot;#4A5568&quot;&gt;F1 / F2：颠倒 Linux 系统调用语义&lt;/font&gt;&lt;br&gt;&lt;font style=&quot;font-size:9.5px&quot; color=&quot;#4A5568&quot;&gt;无显式指令词，关键词规则难拦截&lt;/font&gt;" style="rounded=1;arcSize=6;fillColor=#FDF2F2;strokeColor=#9B2C2C;fontColor=#742A2A;strokeWidth=1.2;fontSize=10.2;fontFamily=Microsoft YaHei, PingFang SC, Helvetica Neue, Arial, sans-serif;whiteSpace=wrap;html=1;align=left;spacingLeft=9;spacingRight=6;" vertex="1" parent="1">
+          <mxGeometry x="36" y="244" width="218" height="74" as="geometry" />
         </mxCell>
-        <mxCell id="atk_inj" value="载荷类型 1：提示注入（100 条）&lt;br&gt;• I1 定向改写答案指令&lt;br&gt;• I2 诱导输出哨兵 RAG_POISON_999&lt;br&gt;伪装为技术备注或系统提示" style="rounded=1;arcSize=12;fillColor=#FEF3E6;strokeColor=#F28E2B;fontColor=#7A4100;strokeWidth=1.8;fontSize=11;fontFamily=Microsoft YaHei, PingFang SC, Helvetica, Arial, sans-serif;whiteSpace=wrap;html=1;align=left;spacingLeft=10;spacingRight=8;" vertex="1" parent="1">
-          <mxGeometry x="48" y="266" width="306" height="110" as="geometry" />
+        <mxCell id="a4" value="约束：不可篡改已落盘基线与评价真值" style="rounded=1;arcSize=6;fillColor=#FFFDFD;strokeColor=#9B2C2C;fontColor=#9B2C2C;strokeWidth=1.2;fontSize=9.8;fontFamily=Microsoft YaHei, PingFang SC, Helvetica Neue, Arial, sans-serif;whiteSpace=wrap;html=1;dashed=1;dashPattern=5 3;" vertex="1" parent="1">
+          <mxGeometry x="36" y="334" width="218" height="36" as="geometry" />
         </mxCell>
-        <mxCell id="atk_fact" value="载荷类型 2：错误技术事实（100 条）&lt;br&gt;• F1 / F2 颠倒 Linux 系统调用语义&lt;br&gt;（如 fork 返回值、SIGKILL 可捕获等）&lt;br&gt;无显式攻击指令，规则词难以拦截" style="rounded=1;arcSize=12;fillColor=#FEF3E6;strokeColor=#F28E2B;fontColor=#7A4100;strokeWidth=1.8;fontSize=11;fontFamily=Microsoft YaHei, PingFang SC, Helvetica, Arial, sans-serif;whiteSpace=wrap;html=1;align=left;spacingLeft=10;spacingRight=8;" vertex="1" parent="1">
-          <mxGeometry x="48" y="404" width="306" height="110" as="geometry" />
+        <mxCell id="p1" value="&lt;b&gt;1. 干净语料入库&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:9.5px&quot; color=&quot;#4A5568&quot;&gt;400 条正常文档&lt;/font&gt;" style="rounded=1;arcSize=6;fillColor=#FFFFFF;strokeColor=#343A40;fontColor=#1A202C;strokeWidth=1.2;fontSize=10.2;fontFamily=Microsoft YaHei, PingFang SC, Helvetica Neue, Arial, sans-serif;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="314" y="68" width="132" height="60" as="geometry" />
         </mxCell>
-        <mxCell id="atk_iso" value="安全边界：攻击者无法触达 evaluation_only" style="rounded=1;arcSize=12;fillColor=#FFF7F7;strokeColor=#CC3311;fontColor=#A61C00;strokeWidth=1.8;fontSize=11;fontFamily=Microsoft YaHei, PingFang SC, Helvetica, Arial, sans-serif;whiteSpace=wrap;html=1;fontStyle=1;dashed=1;dashPattern=6 4;" vertex="1" parent="1">
-          <mxGeometry x="48" y="534" width="306" height="56" as="geometry" />
+        <mxCell id="p2" value="&lt;b&gt;2. 建立基线清单&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:9.5px&quot; color=&quot;#4A5568&quot;&gt;记录干净 SHA-256&lt;/font&gt;" style="shape=cylinder3;boundedLbl=1;backgroundOutline=1;size=8;fillColor=#F8F9FA;strokeColor=#6C757D;fontColor=#2D3748;strokeWidth=1.2;fontSize=10.2;fontFamily=Microsoft YaHei, PingFang SC, Helvetica Neue, Arial, sans-serif;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="476" y="68" width="140" height="60" as="geometry" />
         </mxCell>
-        <mxCell id="p1" value="1. 干净语料入库&lt;br&gt;400 条正常文档" style="rounded=1;arcSize=12;fillColor=#EBF2F7;strokeColor=#4E79A7;fontColor=#1F3B57;strokeWidth=1.5;fontSize=11.5;fontFamily=Microsoft YaHei, PingFang SC, Helvetica, Arial, sans-serif;whiteSpace=wrap;html=1;" vertex="1" parent="1">
-          <mxGeometry x="426" y="134" width="168" height="82" as="geometry" />
+        <mxCell id="p3" value="&lt;b&gt;3. 攻击者替换文档&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:9.5px&quot; color=&quot;#4A5568&quot;&gt;字节改变 (同 doc_id)&lt;/font&gt;" style="rounded=1;arcSize=6;fillColor=#FDF2F2;strokeColor=#9B2C2C;fontColor=#742A2A;strokeWidth=1.3;fontSize=10.2;fontFamily=Microsoft YaHei, PingFang SC, Helvetica Neue, Arial, sans-serif;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="646" y="68" width="140" height="60" as="geometry" />
         </mxCell>
-        <mxCell id="p2" value="2. 先建 SHA-256 基线&lt;br&gt;记录干净文本摘要" style="shape=cylinder3;boundedLbl=1;backgroundOutline=1;size=10;fillColor=#EDF6EC;strokeColor=#59A14F;fontColor=#24541E;strokeWidth=1.6;fontSize=11.5;fontFamily=Microsoft YaHei, PingFang SC, Helvetica, Arial, sans-serif;whiteSpace=wrap;html=1;" vertex="1" parent="1">
-          <mxGeometry x="626" y="134" width="178" height="82" as="geometry" />
+        <mxCell id="p4" value="&lt;b&gt;4. 哈希检出 100%&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:9.5px&quot; color=&quot;#4A5568&quot;&gt;16/16 · 28/28 · 55/55&lt;/font&gt;&lt;br&gt;&lt;font style=&quot;font-size:9.5px&quot; color=&quot;#4A5568&quot;&gt;ASR = 0（正确率 83.3%）&lt;/font&gt;" style="rounded=1;arcSize=6;fillColor=#EEF3F8;strokeColor=#2C5282;fontColor=#1A365D;strokeWidth=1.5;fontSize=10.2;fontFamily=Microsoft YaHei, PingFang SC, Helvetica Neue, Arial, sans-serif;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="816" y="62" width="166" height="72" as="geometry" />
         </mxCell>
-        <mxCell id="p3" value="3. 攻击者替换文档&lt;br&gt;文本字节改变&lt;br&gt;（同 doc_id 替换）" style="rounded=1;arcSize=12;fillColor=#FDECEC;strokeColor=#E15759;fontColor=#7F1D1D;strokeWidth=1.7;fontSize=11.5;fontFamily=Microsoft YaHei, PingFang SC, Helvetica, Arial, sans-serif;whiteSpace=wrap;html=1;" vertex="1" parent="1">
-          <mxGeometry x="836" y="134" width="178" height="82" as="geometry" />
+        <mxCell id="pn" value="结论：字节级哈希对入库后篡改零漏报且低开销，但无法验证入库前内容真实性。" style="rounded=0;fillColor=none;strokeColor=none;fontColor=#495057;strokeWidth=0;fontSize=9.8;fontFamily=Microsoft YaHei, PingFang SC, Helvetica Neue, Arial, sans-serif;whiteSpace=wrap;html=1;strokeColor=none;fillColor=none;align=left;" vertex="1" parent="1">
+          <mxGeometry x="314" y="148" width="668" height="28" as="geometry" />
         </mxCell>
-        <mxCell id="p4" value="4. 完整性校验结果&lt;br&gt;100% 检出篡改&lt;br&gt;16/16 · 28/28 · 55/55&lt;br&gt;ASR = 0（无需语义层）" style="rounded=1;arcSize=12;fillColor=#EDF6EC;strokeColor=#59A14F;fontColor=#24541E;strokeWidth=2.0;fontSize=11;fontFamily=Microsoft YaHei, PingFang SC, Helvetica, Arial, sans-serif;whiteSpace=wrap;html=1;fontStyle=1;" vertex="1" parent="1">
-          <mxGeometry x="1046" y="124" width="184" height="104" as="geometry" />
+        <mxCell id="r1" value="&lt;b&gt;1. 投毒文档混入&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:9.5px&quot; color=&quot;#4A5568&quot;&gt;含伪造 man_pages&lt;/font&gt;" style="rounded=1;arcSize=6;fillColor=#FDF2F2;strokeColor=#9B2C2C;fontColor=#742A2A;strokeWidth=1.3;fontSize=10.2;fontFamily=Microsoft YaHei, PingFang SC, Helvetica Neue, Arial, sans-serif;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="314" y="258" width="132" height="62" as="geometry" />
         </mxCell>
-        <mxCell id="p_note" value="关键结论（post_ingestion）：哈希校验对“入库后字节级篡改”零漏报、低开销；20% 投毒下 integrity 组正确率 83.3%（vs baseline 37.5%）。" style="rounded=1;arcSize=12;fillColor=#EAF5F4;strokeColor=#76B7B2;fontColor=#1F4E4A;strokeWidth=1.2;fontSize=11;fontFamily=Microsoft YaHei, PingFang SC, Helvetica, Arial, sans-serif;whiteSpace=wrap;html=1;" vertex="1" parent="1">
-          <mxGeometry x="426" y="244" width="804" height="62" as="geometry" />
+        <mxCell id="r2" value="&lt;b&gt;2. 后建基线清单&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:9.5px&quot; color=&quot;#4A5568&quot;&gt;基线含投毒文本&lt;/font&gt;" style="shape=cylinder3;boundedLbl=1;backgroundOutline=1;size=8;fillColor=#F8F9FA;strokeColor=#6C757D;fontColor=#2D3748;strokeWidth=1.2;fontSize=10.2;fontFamily=Microsoft YaHei, PingFang SC, Helvetica Neue, Arial, sans-serif;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="476" y="258" width="140" height="62" as="geometry" />
         </mxCell>
-        <mxCell id="r1" value="1. 投毒文档混入&lt;br&gt;同 doc_id 替换&lt;br&gt;（含伪造 man_pages）" style="rounded=1;arcSize=12;fillColor=#FDECEC;strokeColor=#E15759;fontColor=#7F1D1D;strokeWidth=1.7;fontSize=11.2;fontFamily=Microsoft YaHei, PingFang SC, Helvetica, Arial, sans-serif;whiteSpace=wrap;html=1;" vertex="1" parent="1">
-          <mxGeometry x="426" y="412" width="168" height="82" as="geometry" />
+        <mxCell id="r3" value="&lt;b&gt;3. 哈希检出 0%&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:9.5px&quot; color=&quot;#4A5568&quot;&gt;integrity 组退化为&lt;/font&gt;&lt;br&gt;&lt;font style=&quot;font-size:9.5px&quot; color=&quot;#4A5568&quot;&gt;baseline (ASR 65%)&lt;/font&gt;" style="rounded=1;arcSize=6;fillColor=#FDF2F2;strokeColor=#9B2C2C;fontColor=#742A2A;strokeWidth=1.3;fontSize=10.2;fontFamily=Microsoft YaHei, PingFang SC, Helvetica Neue, Arial, sans-serif;whiteSpace=wrap;html=1;dashed=1;dashPattern=5 3;" vertex="1" parent="1">
+          <mxGeometry x="646" y="258" width="140" height="62" as="geometry" />
         </mxCell>
-        <mxCell id="r2" value="2. 后建 SHA-256 基线&lt;br&gt;基线已包含投毒文本&lt;br&gt;哈希校验检出率 0%" style="shape=cylinder3;boundedLbl=1;backgroundOutline=1;size=10;fillColor=#FDF9E7;strokeColor=#D4A017;fontColor=#6B4E00;strokeWidth=1.7;fontSize=11.2;fontFamily=Microsoft YaHei, PingFang SC, Helvetica, Arial, sans-serif;whiteSpace=wrap;html=1;" vertex="1" parent="1">
-          <mxGeometry x="626" y="412" width="178" height="82" as="geometry" />
+        <mxCell id="r4" value="&lt;b&gt;4. 来源 + 语义互补&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:9.5px&quot; color=&quot;#4A5568&quot;&gt;来源 31/55 · 语义 24/55&lt;/font&gt;&lt;br&gt;&lt;font style=&quot;font-size:9.5px&quot; color=&quot;#4A5568&quot;&gt;ASR = 0（14 正常转复核）&lt;/font&gt;" style="rounded=1;arcSize=6;fillColor=#EEF3F8;strokeColor=#2C5282;fontColor=#1A365D;strokeWidth=1.5;fontSize=10.2;fontFamily=Microsoft YaHei, PingFang SC, Helvetica Neue, Arial, sans-serif;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="816" y="252" width="166" height="74" as="geometry" />
         </mxCell>
-        <mxCell id="r3" value="3. 来源 + 语义联防&lt;br&gt;来源拦截 31/55 未知源&lt;br&gt;语义拦截 24/55 伪造源" style="rounded=1;arcSize=12;fillColor=#FEF3E6;strokeColor=#F28E2B;fontColor=#7A4100;strokeWidth=2.2;fontSize=11.2;fontFamily=Microsoft YaHei, PingFang SC, Helvetica, Arial, sans-serif;whiteSpace=wrap;html=1;" vertex="1" parent="1">
-          <mxGeometry x="836" y="412" width="178" height="82" as="geometry" />
+        <mxCell id="rn" value="结论：入库前投毒必须依赖来源规则与语义检测互补拦截；保守来源白名单带来覆盖率代价。" style="rounded=0;fillColor=none;strokeColor=none;fontColor=#495057;strokeWidth=0;fontSize=9.8;fontFamily=Microsoft YaHei, PingFang SC, Helvetica Neue, Arial, sans-serif;whiteSpace=wrap;html=1;strokeColor=none;fillColor=none;align=left;" vertex="1" parent="1">
+          <mxGeometry x="314" y="340" width="668" height="30" as="geometry" />
         </mxCell>
-        <mxCell id="r4" value="4. 防护结果与代价&lt;br&gt;ASR(被攻击) 65% → 0%&lt;br&gt;代价：14 条正常&lt;br&gt;distro_wiki 被转复核" style="rounded=1;arcSize=12;fillColor=#EDF6EC;strokeColor=#59A14F;fontColor=#24541E;strokeWidth=1.8;fontSize=11;fontFamily=Microsoft YaHei, PingFang SC, Helvetica, Arial, sans-serif;whiteSpace=wrap;html=1;fontStyle=1;" vertex="1" parent="1">
-          <mxGeometry x="1046" y="402" width="184" height="104" as="geometry" />
-        </mxCell>
-        <mxCell id="r_note" value="关键结论（pre_ingestion）：SHA-256 无法发现入库前投毒（integrity 组与 baseline 完全一致，ASR 65%）；必须依赖来源与内容级语义检测互补。" style="rounded=1;arcSize=12;fillColor=#FFF7F7;strokeColor=#CC3311;fontColor=#A61C00;strokeWidth=1.4;fontSize=11;fontFamily=Microsoft YaHei, PingFang SC, Helvetica, Arial, sans-serif;whiteSpace=wrap;html=1;dashed=1;dashPattern=6 4;" vertex="1" parent="1">
-          <mxGeometry x="426" y="522" width="804" height="62" as="geometry" />
-        </mxCell>
-        <mxCell id="e1" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#4E79A7;strokeWidth=1.6;endArrow=block;endFill=1;fontFamily=Microsoft YaHei, PingFang SC, Helvetica, Arial, sans-serif;fontSize=11;fontColor=#2D3436;labelBackgroundColor=#FFFFFF;exitX=1.0;exitY=0.5;exitDx=0;exitDy=0;entryX=0.0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="p1" target="p2">
+        <mxCell id="e1" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#343A40;strokeWidth=1.2;endArrow=classic;endFill=1;fontFamily=Microsoft YaHei, PingFang SC, Helvetica Neue, Arial, sans-serif;fontSize=10;fontColor=#2D3748;labelBackgroundColor=#FFFFFF;exitX=1.0;exitY=0.5;exitDx=0;exitDy=0;entryX=0.0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="p1" target="p2">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="e2" value="入库后篡改" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#E15759;strokeWidth=1.6;endArrow=block;endFill=1;fontFamily=Microsoft YaHei, PingFang SC, Helvetica, Arial, sans-serif;fontSize=11;fontColor=#2D3436;labelBackgroundColor=#FFFFFF;exitX=1.0;exitY=0.5;exitDx=0;exitDy=0;entryX=0.0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="p2" target="p3">
+        <mxCell id="e2" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#9B2C2C;strokeWidth=1.2;endArrow=classic;endFill=1;fontFamily=Microsoft YaHei, PingFang SC, Helvetica Neue, Arial, sans-serif;fontSize=10;fontColor=#2D3748;labelBackgroundColor=#FFFFFF;exitX=1.0;exitY=0.5;exitDx=0;exitDy=0;entryX=0.0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="p2" target="p3">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="e3" value="SHA-256 失败" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#59A14F;strokeWidth=1.8;endArrow=block;endFill=1;fontFamily=Microsoft YaHei, PingFang SC, Helvetica, Arial, sans-serif;fontSize=11;fontColor=#2D3436;labelBackgroundColor=#FFFFFF;exitX=1.0;exitY=0.5;exitDx=0;exitDy=0;entryX=0.0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="p3" target="p4">
+        <mxCell id="e3" value="fail" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#2C5282;strokeWidth=1.3;endArrow=classic;endFill=1;fontFamily=Microsoft YaHei, PingFang SC, Helvetica Neue, Arial, sans-serif;fontSize=10;fontColor=#2D3748;labelBackgroundColor=#FFFFFF;exitX=1.0;exitY=0.5;exitDx=0;exitDy=0;entryX=0.0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="p3" target="p4">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="e4" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#E15759;strokeWidth=1.6;endArrow=block;endFill=1;fontFamily=Microsoft YaHei, PingFang SC, Helvetica, Arial, sans-serif;fontSize=11;fontColor=#2D3436;labelBackgroundColor=#FFFFFF;exitX=1.0;exitY=0.5;exitDx=0;exitDy=0;entryX=0.0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="r1" target="r2">
+        <mxCell id="e4" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#343A40;strokeWidth=1.2;endArrow=classic;endFill=1;fontFamily=Microsoft YaHei, PingFang SC, Helvetica Neue, Arial, sans-serif;fontSize=10;fontColor=#2D3748;labelBackgroundColor=#FFFFFF;exitX=1.0;exitY=0.5;exitDx=0;exitDy=0;entryX=0.0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="r1" target="r2">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="e5" value="哈希全部放行" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#D4A017;strokeWidth=1.6;endArrow=block;endFill=1;fontFamily=Microsoft YaHei, PingFang SC, Helvetica, Arial, sans-serif;fontSize=11;fontColor=#2D3436;labelBackgroundColor=#FFFFFF;exitX=1.0;exitY=0.5;exitDx=0;exitDy=0;entryX=0.0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="r2" target="r3">
+        <mxCell id="e5" value="pass" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#9B2C2C;strokeWidth=1.2;endArrow=classic;endFill=1;fontFamily=Microsoft YaHei, PingFang SC, Helvetica Neue, Arial, sans-serif;fontSize=10;fontColor=#2D3748;labelBackgroundColor=#FFFFFF;exitX=1.0;exitY=0.5;exitDx=0;exitDy=0;entryX=0.0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="r2" target="r3">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="e6" value="全部隔离" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#59A14F;strokeWidth=1.8;endArrow=block;endFill=1;fontFamily=Microsoft YaHei, PingFang SC, Helvetica, Arial, sans-serif;fontSize=11;fontColor=#2D3436;labelBackgroundColor=#FFFFFF;exitX=1.0;exitY=0.5;exitDx=0;exitDy=0;entryX=0.0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="r3" target="r4">
+        <mxCell id="e6" value="联防" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#2C5282;strokeWidth=1.3;endArrow=classic;endFill=1;fontFamily=Microsoft YaHei, PingFang SC, Helvetica Neue, Arial, sans-serif;fontSize=10;fontColor=#2D3748;labelBackgroundColor=#FFFFFF;exitX=1.0;exitY=0.5;exitDx=0;exitDy=0;entryX=0.0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="r3" target="r4">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="e7" value="注入载荷" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#E15759;strokeWidth=1.4;endArrow=block;endFill=1;fontFamily=Microsoft YaHei, PingFang SC, Helvetica, Arial, sans-serif;fontSize=11;fontColor=#2D3436;labelBackgroundColor=#FFFFFF;exitX=1.0;exitY=0.5;exitDx=0;exitDy=0;entryX=0.5;entryY=0.0;entryDx=0;entryDy=0;dashed=1;dashPattern=6 4;" edge="1" parent="1" source="atk_inj" target="p3">
+        <mxCell id="e7" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#9B2C2C;strokeWidth=1.1;endArrow=classic;endFill=1;fontFamily=Microsoft YaHei, PingFang SC, Helvetica Neue, Arial, sans-serif;fontSize=10;fontColor=#2D3748;labelBackgroundColor=#FFFFFF;exitX=1.0;exitY=0.5;exitDx=0;exitDy=0;entryX=0.5;entryY=0.0;entryDx=0;entryDy=0;dashed=1;dashPattern=5 3;" edge="1" parent="1" source="a2" target="p3">
           <mxGeometry relative="1" as="geometry">
             <Array as="points">
-              <mxPoint x="388" y="321" />
-              <mxPoint x="388" y="108" />
-              <mxPoint x="925" y="108" />
+              <mxPoint x="282" y="189" />
+              <mxPoint x="282" y="50" />
+              <mxPoint x="716" y="50" />
             </Array>
           </mxGeometry>
         </mxCell>
-        <mxCell id="e8" value="投毒入库" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#E15759;strokeWidth=1.5;endArrow=block;endFill=1;fontFamily=Microsoft YaHei, PingFang SC, Helvetica, Arial, sans-serif;fontSize=11;fontColor=#2D3436;labelBackgroundColor=#FFFFFF;exitX=1.0;exitY=0.5;exitDx=0;exitDy=0;entryX=0.0;entryY=0.5;entryDx=0;entryDy=0;dashed=1;dashPattern=6 4;" edge="1" parent="1" source="atk_fact" target="r1">
+        <mxCell id="e8" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#9B2C2C;strokeWidth=1.1;endArrow=classic;endFill=1;fontFamily=Microsoft YaHei, PingFang SC, Helvetica Neue, Arial, sans-serif;fontSize=10;fontColor=#2D3748;labelBackgroundColor=#FFFFFF;exitX=1.0;exitY=0.5;exitDx=0;exitDy=0;entryX=0.0;entryY=0.5;entryDx=0;entryDy=0;dashed=1;dashPattern=5 3;" edge="1" parent="1" source="a3" target="r1">
           <mxGeometry relative="1" as="geometry">
             <Array as="points">
-              <mxPoint x="388" y="459" />
-              <mxPoint x="388" y="453" />
+              <mxPoint x="282" y="281" />
+              <mxPoint x="282" y="289" />
             </Array>
           </mxGeometry>
         </mxCell>
-        <mxCell id="legend_box_0" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#EBF2F7;strokeColor=#4E79A7;strokeWidth=1.5;" vertex="1" parent="1">
-          <mxGeometry x="30" y="634" width="22" height="14" as="geometry" />
-        </mxCell>
-        <mxCell id="legend_lbl_0" value="正常语料状态" style="text;html=1;align=left;verticalAlign=middle;strokeColor=none;fillColor=none;fontSize=11;fontColor=#2D3436;fontFamily=Microsoft YaHei, PingFang SC, Helvetica, Arial, sans-serif;" vertex="1" parent="1">
-          <mxGeometry x="58" y="630" width="169" height="22" as="geometry" />
-        </mxCell>
-        <mxCell id="legend_box_1" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FDECEC;strokeColor=#E15759;strokeWidth=1.5;" vertex="1" parent="1">
-          <mxGeometry x="233" y="634" width="22" height="14" as="geometry" />
-        </mxCell>
-        <mxCell id="legend_lbl_1" value="攻击 / 投毒篡改" style="text;html=1;align=left;verticalAlign=middle;strokeColor=none;fillColor=none;fontSize=11;fontColor=#2D3436;fontFamily=Microsoft YaHei, PingFang SC, Helvetica, Arial, sans-serif;" vertex="1" parent="1">
-          <mxGeometry x="261" y="630" width="169" height="22" as="geometry" />
-        </mxCell>
-        <mxCell id="legend_box_2" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FDF9E7;strokeColor=#D4A017;strokeWidth=1.5;" vertex="1" parent="1">
-          <mxGeometry x="436" y="634" width="22" height="14" as="geometry" />
-        </mxCell>
-        <mxCell id="legend_lbl_2" value="基线失效状态（pre）" style="text;html=1;align=left;verticalAlign=middle;strokeColor=none;fillColor=none;fontSize=11;fontColor=#2D3436;fontFamily=Microsoft YaHei, PingFang SC, Helvetica, Arial, sans-serif;" vertex="1" parent="1">
-          <mxGeometry x="464" y="630" width="169" height="22" as="geometry" />
-        </mxCell>
-        <mxCell id="legend_box_3" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FEF3E6;strokeColor=#F28E2B;strokeWidth=1.5;" vertex="1" parent="1">
-          <mxGeometry x="639" y="634" width="22" height="14" as="geometry" />
-        </mxCell>
-        <mxCell id="legend_lbl_3" value="载荷与核心防御层" style="text;html=1;align=left;verticalAlign=middle;strokeColor=none;fillColor=none;fontSize=11;fontColor=#2D3436;fontFamily=Microsoft YaHei, PingFang SC, Helvetica, Arial, sans-serif;" vertex="1" parent="1">
-          <mxGeometry x="667" y="630" width="169" height="22" as="geometry" />
-        </mxCell>
-        <mxCell id="legend_box_4" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#EDF6EC;strokeColor=#59A14F;strokeWidth=1.5;" vertex="1" parent="1">
-          <mxGeometry x="842" y="634" width="22" height="14" as="geometry" />
-        </mxCell>
-        <mxCell id="legend_lbl_4" value="成功检出与阻断" style="text;html=1;align=left;verticalAlign=middle;strokeColor=none;fillColor=none;fontSize=11;fontColor=#2D3436;fontFamily=Microsoft YaHei, PingFang SC, Helvetica, Arial, sans-serif;" vertex="1" parent="1">
-          <mxGeometry x="870" y="630" width="169" height="22" as="geometry" />
-        </mxCell>
-        <mxCell id="legend_box_5" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFF7F7;strokeColor=#CC3311;strokeWidth=1.5;dashed=1;" vertex="1" parent="1">
-          <mxGeometry x="1045" y="634" width="22" height="14" as="geometry" />
-        </mxCell>
-        <mxCell id="legend_lbl_5" value="核心安全边界提示" style="text;html=1;align=left;verticalAlign=middle;strokeColor=none;fillColor=none;fontSize=11;fontColor=#2D3436;fontFamily=Microsoft YaHei, PingFang SC, Helvetica, Arial, sans-serif;" vertex="1" parent="1">
-          <mxGeometry x="1073" y="630" width="169" height="22" as="geometry" />
+        <mxCell id="footnote" value="注：图中括号内计数（55/55、31/55、24/55）对应 20% 投毒比例下 24 道冻结查询实际检索到的恶意文档总数。" style="text;html=1;align=left;verticalAlign=middle;strokeColor=none;fillColor=none;fontSize=10;fontColor=#6C757D;fontFamily=Microsoft YaHei, PingFang SC, Helvetica Neue, Arial, sans-serif;" vertex="1" parent="1">
+          <mxGeometry x="20" y="390" width="980" height="20" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>

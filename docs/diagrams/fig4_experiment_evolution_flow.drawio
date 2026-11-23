@@ -1,98 +1,49 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<mxfile host="app.diagrams.net" agent="rag-trust-demo/generate_diagrams.py" version="24.7.17">
-  <diagram id="fig4_experiment_evolution_flow" name="图 4  五阶段实验演进、负面诊断与工程冻结闭环流程图">
-    <mxGraphModel dx="1200" dy="800" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1320" pageHeight="680" math="0" shadow="0" background="#FFFFFF">
+<mxfile host="Electron" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/29.6.1 Chrome/142.0.7444.265 Electron/39.8.0 Safari/537.36" version="29.6.1">
+  <diagram id="fig4_experiment_evolution_flow" name="图4_五阶段实验演进与决策闭环">
+    <mxGraphModel dx="1188" dy="701" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1058" pageHeight="388" background="#FFFFFF" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
-        <mxCell id="title_main" value="&lt;b&gt;图 4  五阶段实验演进、负面诊断与工程冻结闭环流程图&lt;/b&gt;" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=0;strokeColor=none;fillColor=none;fontSize=18;fontColor=#1D3557;fontFamily=Microsoft YaHei, PingFang SC, Helvetica, Arial, sans-serif;" vertex="1" parent="1">
-          <mxGeometry x="20" y="12" width="1280" height="30" as="geometry" />
+        <mxCell id="s1" parent="1" style="rounded=1;arcSize=6;fillColor=#FFFFFF;strokeColor=#343A40;fontColor=#1A202C;strokeWidth=1.2;fontSize=10.2;fontFamily=Microsoft YaHei, PingFang SC, Helvetica Neue, Arial, sans-serif;whiteSpace=wrap;html=1;align=center;spacingLeft=9;spacingRight=6;" value="&lt;b&gt;阶段 1：正式轮四组对照（768 查询）&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size: 9.5px;&quot; color=&quot;#4A5568&quot;&gt;• 组合防护将 ASR 由 0.650 压至 0.000&lt;/font&gt;&lt;br&gt;&lt;font style=&quot;font-size: 9.5px;&quot; color=&quot;#4A5568&quot;&gt;• 检测器 P=0.976 / R=1.000 / FPR=0.63%&lt;/font&gt;&lt;br&gt;&lt;font style=&quot;font-size: 9.5px;&quot; color=&quot;#4A5568&quot;&gt;• 暴露：14 条 distro_wiki 转复核致正确率 −16.7%&lt;/font&gt;" vertex="1">
+          <mxGeometry height="134" width="286" x="20" y="22" as="geometry" />
         </mxCell>
-        <mxCell id="title_sub" value="以失败驱动迭代：从正式轮（768 条）到段落消融（388 条）、API 挑战（224 条）、语义门控失败（153 条）与 BGE 重排消融（612 条）" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=0;strokeColor=none;fillColor=none;fontSize=11;fontColor=#5A626A;fontFamily=Microsoft YaHei, PingFang SC, Helvetica, Arial, sans-serif;" vertex="1" parent="1">
-          <mxGeometry x="20" y="42" width="1280" height="22" as="geometry" />
+        <mxCell id="s2" parent="1" style="rounded=1;arcSize=6;fillColor=#FFFFFF;strokeColor=#343A40;fontColor=#1A202C;strokeWidth=1.2;fontSize=10.2;fontFamily=Microsoft YaHei, PingFang SC, Helvetica Neue, Arial, sans-serif;whiteSpace=wrap;html=1;align=center;spacingLeft=9;spacingRight=6;" value="&lt;b&gt;阶段 2：证据粒度四条件消融（388 条）&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size: 9.5px;&quot; color=&quot;#4A5568&quot;&gt;• 97 开发题对比句子抽取与完整段落&lt;/font&gt;&lt;br&gt;&lt;font style=&quot;font-size: 9.5px;&quot; color=&quot;#4A5568&quot;&gt;• 原开发 AI 暂判：句子 42/47 vs 段落 67/72&lt;/font&gt;&lt;br&gt;&lt;font style=&quot;font-size: 9.5px;&quot; color=&quot;#4A5568&quot;&gt;• 结论：完整段落避免撕裂条件，净增 +25 题&lt;/font&gt;" vertex="1">
+          <mxGeometry height="134" width="286" x="386" y="22" as="geometry" />
         </mxCell>
-        <mxCell id="s1" value="阶段 1：正式轮四组对照（10/27）&lt;br&gt;768 查询 + 1200 文档全语料评价&lt;br&gt;• 组合防护 ASR 65% → 0%&lt;br&gt;• 检测器 P=0.976 / R=1.000 / FPR=0.63%&lt;br&gt;• 暴露问题：组合组 20% 投毒正确率&lt;br&gt;  降至 66.7%（14 条 distro_wiki 误伤）" style="rounded=1;arcSize=12;fillColor=#EBF2F7;strokeColor=#4E79A7;fontColor=#1F3B57;strokeWidth=1.7;fontSize=11;fontFamily=Microsoft YaHei, PingFang SC, Helvetica, Arial, sans-serif;whiteSpace=wrap;html=1;align=left;spacingLeft=10;spacingRight=8;" vertex="1" parent="1">
-          <mxGeometry x="36" y="98" width="286" height="174" as="geometry" />
+        <mxCell id="s3" parent="1" style="rounded=1;arcSize=6;fillColor=#FFFFFF;strokeColor=#343A40;fontColor=#1A202C;strokeWidth=1.2;fontSize=10.2;fontFamily=Microsoft YaHei, PingFang SC, Helvetica Neue, Arial, sans-serif;whiteSpace=wrap;html=1;align=center;spacingLeft=9;spacingRight=6;" value="&lt;b&gt;阶段 3：API 挑战与 GPT-6 复核（224 条）&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size: 9.5px;&quot; color=&quot;#4A5568&quot;&gt;• 8 事实簇 × 7 场景 = 56 题（98 项复核）&lt;/font&gt;&lt;br&gt;&lt;font style=&quot;font-size: 9.5px;&quot; color=&quot;#4A5568&quot;&gt;• 联合口径：段落不滤 27/56 &amp;gt; 过滤 22/56&lt;/font&gt;&lt;br&gt;&lt;font style=&quot;font-size: 9.5px;&quot; color=&quot;#4A5568&quot;&gt;• 失败：全文过滤误杀 8/8 合法引用样例&lt;/font&gt;" vertex="1">
+          <mxGeometry height="134" width="286" x="752" y="22" as="geometry" />
         </mxCell>
-        <mxCell id="s2" value="阶段 2：证据粒度四条件消融（10/29）&lt;br&gt;97 开发题 × 4 条件 = 388 条推理&lt;br&gt;• 句子不滤 42 / 句子过滤 47&lt;br&gt;• 段落不滤 67 / 段落过滤 72&lt;br&gt;  （原 AI 暂判口径）&lt;br&gt;• 结论：完整段落显著优于断句抽取" style="rounded=1;arcSize=12;fillColor=#FEF3E6;strokeColor=#F28E2B;fontColor=#7A4100;strokeWidth=2.0;fontSize=11;fontFamily=Microsoft YaHei, PingFang SC, Helvetica, Arial, sans-serif;whiteSpace=wrap;html=1;align=left;spacingLeft=10;spacingRight=8;" vertex="1" parent="1">
-          <mxGeometry x="364" y="98" width="286" height="174" as="geometry" />
+        <mxCell id="s4" parent="1" style="rounded=1;arcSize=6;fillColor=#FDF2F2;strokeColor=#9B2C2C;fontColor=#742A2A;strokeWidth=1.4;fontSize=10.2;fontFamily=Microsoft YaHei, PingFang SC, Helvetica Neue, Arial, sans-serif;whiteSpace=wrap;html=1;dashed=1;dashPattern=5 3;align=center;spacingLeft=9;spacingRight=6;" value="&lt;b&gt;阶段 4：语义门控 v1（153 条 · 负面实验）&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size: 9.5px;&quot; color=&quot;#4A5568&quot;&gt;• 133 次 1.5B 调用全部拒答（覆盖率 0%）&lt;/font&gt;&lt;br&gt;&lt;font style=&quot;font-size: 9.5px;&quot; color=&quot;#4A5568&quot;&gt;• 24 次正负/反转编码/自由解码诊断确认&lt;/font&gt;&lt;br&gt;&lt;font style=&quot;font-size: 9.5px;&quot; color=&quot;#4A5568&quot;&gt;  非单纯约束解码问题 → 止损不并入默认&lt;/font&gt;" vertex="1">
+          <mxGeometry height="144" width="286" x="20" y="206" as="geometry" />
         </mxCell>
-        <mxCell id="s3" value="阶段 3：API 挑战与 GPT-6 复核（10/29–30）&lt;br&gt;8 事实簇 × 7 场景 = 56 题 × 4 = 224 条&lt;br&gt;• GPT-6 联合口径：段落不滤 27/56&lt;br&gt;  &amp;gt; 段落过滤 22/56&lt;br&gt;• 明确失败：全文禁止词过滤误伤&lt;br&gt;  8/8 合法引用攻击样例的正确文档" style="rounded=1;arcSize=12;fillColor=#FEF3E6;strokeColor=#F28E2B;fontColor=#7A4100;strokeWidth=2.0;fontSize=11;fontFamily=Microsoft YaHei, PingFang SC, Helvetica, Arial, sans-serif;whiteSpace=wrap;html=1;align=left;spacingLeft=10;spacingRight=8;" vertex="1" parent="1">
-          <mxGeometry x="692" y="98" width="286" height="174" as="geometry" />
+        <mxCell id="s5" parent="1" style="rounded=1;arcSize=6;fillColor=#FFFFFF;strokeColor=#343A40;fontColor=#1A202C;strokeWidth=1.2;fontSize=10.2;fontFamily=Microsoft YaHei, PingFang SC, Helvetica Neue, Arial, sans-serif;whiteSpace=wrap;html=1;align=center;spacingLeft=9;spacingRight=6;" value="&lt;b&gt;阶段 5：BGE 重排与句界标记（612 条）&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size: 9.5px;&quot; color=&quot;#4A5568&quot;&gt;• 40 对探针：复述 8/8、错事实 6/8 过高分&lt;/font&gt;&lt;br&gt;&lt;font style=&quot;font-size: 9.5px;&quot; color=&quot;#4A5568&quot;&gt;  → 禁止相关性阈值作充分性/事实门槛&lt;/font&gt;&lt;br&gt;&lt;font style=&quot;font-size: 9.5px;&quot; color=&quot;#4A5568&quot;&gt;• 44 项补评：API 32/56 (+5/0退)，开发 66/97&lt;/font&gt;" vertex="1">
+          <mxGeometry height="144" width="286" x="386" y="206" as="geometry" />
         </mxCell>
-        <mxCell id="s4" value="阶段 4：语义门控 v1（10/30）&lt;br&gt;【负面实验 · 诚实止损】&lt;br&gt;153 记录（133 次额外调用）&lt;br&gt;• 133/133 全部被拒（覆盖率 0%）&lt;br&gt;• 24 次正负/编码/解码诊断确认&lt;br&gt;  不可仅归因于约束解码 → 不并入默认" style="rounded=1;arcSize=12;fillColor=#FDECEC;strokeColor=#E15759;fontColor=#7F1D1D;strokeWidth=2.2;fontSize=11;fontFamily=Microsoft YaHei, PingFang SC, Helvetica, Arial, sans-serif;whiteSpace=wrap;html=1;align=left;spacingLeft=10;spacingRight=8;" vertex="1" parent="1">
-          <mxGeometry x="1020" y="98" width="264" height="174" as="geometry" />
+        <mxCell id="s6" parent="1" style="rounded=1;arcSize=6;fillColor=#EEF3F8;strokeColor=#2C5282;fontColor=#1A365D;strokeWidth=1.6;fontSize=10.2;fontFamily=Microsoft YaHei, PingFang SC, Helvetica Neue, Arial, sans-serif;whiteSpace=wrap;html=1;align=center;spacingLeft=9;spacingRight=6;" value="&lt;b&gt;最终工程冻结决策&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size: 9.5px;&quot; color=&quot;#4A5568&quot;&gt;• 默认：三层可审计筛查 + 完整段落&lt;/font&gt;&lt;br&gt;&lt;font style=&quot;font-size: 9.5px;&quot; color=&quot;#4A5568&quot;&gt;• 优先候选：重排+标记（待做 2×2 因子消融）&lt;/font&gt;&lt;br&gt;&lt;font style=&quot;font-size: 9.5px;&quot; color=&quot;#4A5568&quot;&gt;• 排除：全局禁止词 / 语义门控 v1 / 硬阈值&lt;/font&gt;&lt;br&gt;&lt;font style=&quot;font-size: 9.5px;&quot; color=&quot;#4A5568&quot;&gt;• 后续：新建 ≥24 个未见事实簇验证&lt;/font&gt;" vertex="1">
+          <mxGeometry height="144" width="286" x="752" y="206" as="geometry" />
         </mxCell>
-        <mxCell id="s5" value="阶段 5：BGE-reranker-v2-m3 重排与句界标记（10/30）&lt;br&gt;• 阶段 5a（40 对相关性校准）：局部阈值 1.275 通过 8/8 正例与 4/4 无关负例，&lt;br&gt;  但仅复述问题（8/8，分值 10.65–10.82）与错误事实（6/8）同样高分通过&lt;br&gt;  → 禁止把相关性阈值当证据充分性或事实可靠门槛&lt;br&gt;• 阶段 5b（153 题 × 4 组 = 612 条生成）：完成基线 / 重排 / 标记 / 重排+标记实测" style="rounded=1;arcSize=12;fillColor=#FEF3E6;strokeColor=#F28E2B;fontColor=#7A4100;strokeWidth=2.0;fontSize=11;fontFamily=Microsoft YaHei, PingFang SC, Helvetica, Arial, sans-serif;whiteSpace=wrap;html=1;align=left;spacingLeft=10;spacingRight=8;" vertex="1" parent="1">
-          <mxGeometry x="36" y="344" width="412" height="198" as="geometry" />
-        </mxCell>
-        <mxCell id="s6" value="阶段 5c：44 项补充复核与哈希核验&lt;br&gt;• 逐项核对 Linux man-pages 与内核文档，回填 73 条新回答，&lt;br&gt;  612 条记录全部有状态（verify_rerank_review.py 通过）&lt;br&gt;• 混合核心口径（两集分开，不混算总准确率）：&lt;br&gt;  - 开发 97 题：基线 67 / 重排 66 / 标记 65 / 重排+标记 66&lt;br&gt;  - API 56 题：基线 27 / 重排 29 / 标记 25 / 重排+标记 32" style="rounded=1;arcSize=12;fillColor=#EAF5F4;strokeColor=#76B7B2;fontColor=#1F4E4A;strokeWidth=1.7;fontSize=11;fontFamily=Microsoft YaHei, PingFang SC, Helvetica, Arial, sans-serif;whiteSpace=wrap;html=1;align=left;spacingLeft=10;spacingRight=8;" vertex="1" parent="1">
-          <mxGeometry x="494" y="344" width="388" height="198" as="geometry" />
-        </mxCell>
-        <mxCell id="s7" value="最终工程决策与开源发布冻结&lt;br&gt;• 默认方案：保留完整段落证据 + 三层可审计流水线&lt;br&gt;• 优先候选：重排+标记（API +5 且 0 回归，待做顺序/裁剪消融）&lt;br&gt;• 显式排除：全局禁止词过滤、语义门控 v1、相关性硬拒答&lt;br&gt;• 复现保障：64 项单元测试通过 + SHA-256 哈希核验&lt;br&gt;• 后续扩展：冻结方法后新建 ≥24 个未见事实簇评测" style="rounded=1;arcSize=12;fillColor=#EDF6EC;strokeColor=#59A14F;fontColor=#24541E;strokeWidth=2.0;fontSize=11;fontFamily=Microsoft YaHei, PingFang SC, Helvetica, Arial, sans-serif;whiteSpace=wrap;html=1;align=left;spacingLeft=10;spacingRight=8;" vertex="1" parent="1">
-          <mxGeometry x="928" y="344" width="356" height="198" as="geometry" />
-        </mxCell>
-        <mxCell id="note_bar" value="方法论原则：严格分口径报告（规则评分 / 原 AI 暂判 / GPT-6 事后联合口径 / 模型辅助溯源补评），已暴露数据仅作开发诊断，不宣称未见数据泛化。" style="rounded=1;arcSize=12;fillColor=#FFF7F7;strokeColor=#CC3311;fontColor=#A61C00;strokeWidth=1.5;fontSize=11.2;fontFamily=Microsoft YaHei, PingFang SC, Helvetica, Arial, sans-serif;whiteSpace=wrap;html=1;fontStyle=1;dashed=1;dashPattern=6 4;" vertex="1" parent="1">
-          <mxGeometry x="36" y="568" width="1248" height="52" as="geometry" />
-        </mxCell>
-        <mxCell id="e1" value="诊断覆盖率下降" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#4E79A7;strokeWidth=1.7;endArrow=block;endFill=1;fontFamily=Microsoft YaHei, PingFang SC, Helvetica, Arial, sans-serif;fontSize=11;fontColor=#2D3436;labelBackgroundColor=#FFFFFF;exitX=1.0;exitY=0.5;exitDx=0;exitDy=0;entryX=0.0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="s1" target="s2">
+        <mxCell id="e1" edge="1" parent="1" source="s1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#343A40;strokeWidth=1.2;endArrow=classic;endFill=1;fontFamily=Microsoft YaHei, PingFang SC, Helvetica Neue, Arial, sans-serif;fontSize=10;fontColor=#2D3748;labelBackgroundColor=#FFFFFF;exitX=1.0;exitY=0.5;exitDx=0;exitDy=0;entryX=0.0;entryY=0.5;entryDx=0;entryDy=0;" target="s2" value="诊断覆盖率">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="e2" value="压力测试验证" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#F28E2B;strokeWidth=1.7;endArrow=block;endFill=1;fontFamily=Microsoft YaHei, PingFang SC, Helvetica, Arial, sans-serif;fontSize=11;fontColor=#2D3436;labelBackgroundColor=#FFFFFF;exitX=1.0;exitY=0.5;exitDx=0;exitDy=0;entryX=0.0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="s2" target="s3">
+        <mxCell id="e2" edge="1" parent="1" source="s2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#343A40;strokeWidth=1.2;endArrow=classic;endFill=1;fontFamily=Microsoft YaHei, PingFang SC, Helvetica Neue, Arial, sans-serif;fontSize=10;fontColor=#2D3748;labelBackgroundColor=#FFFFFF;exitX=1.0;exitY=0.5;exitDx=0;exitDy=0;entryX=0.0;entryY=0.5;entryDx=0;entryDy=0;" target="s3" value="压力测试">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="e3" value="尝试小模型自审" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#E15759;strokeWidth=1.7;endArrow=block;endFill=1;fontFamily=Microsoft YaHei, PingFang SC, Helvetica, Arial, sans-serif;fontSize=11;fontColor=#2D3436;labelBackgroundColor=#FFFFFF;exitX=1.0;exitY=0.5;exitDx=0;exitDy=0;entryX=0.0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="s3" target="s4">
-          <mxGeometry relative="1" as="geometry" />
-        </mxCell>
-        <mxCell id="e4" value="止损转向专用重排" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#E15759;strokeWidth=1.8;endArrow=block;endFill=1;fontFamily=Microsoft YaHei, PingFang SC, Helvetica, Arial, sans-serif;fontSize=11;fontColor=#2D3436;labelBackgroundColor=#FFFFFF;exitX=0.5;exitY=1.0;exitDx=0;exitDy=0;entryX=0.5;entryY=0.0;entryDx=0;entryDy=0;dashed=1;dashPattern=6 4;" edge="1" parent="1" source="s4" target="s5">
+        <mxCell id="e3" edge="1" parent="1" source="s3" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#9B2C2C;strokeWidth=1.2;endArrow=classic;endFill=1;fontFamily=Microsoft YaHei, PingFang SC, Helvetica Neue, Arial, sans-serif;fontSize=10;fontColor=#2D3748;labelBackgroundColor=#FFFFFF;exitX=0.5;exitY=1.0;exitDx=0;exitDy=0;entryX=0.5;entryY=0.0;entryDx=0;entryDy=0;" target="s4" value="尝试语义门控">
           <mxGeometry relative="1" as="geometry">
             <Array as="points">
-              <mxPoint x="1152" y="308" />
-              <mxPoint x="242" y="308" />
+              <mxPoint x="895" y="182" />
+              <mxPoint x="163" y="182" />
             </Array>
           </mxGeometry>
         </mxCell>
-        <mxCell id="e5" value="补齐 73 条新回答状态" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#F28E2B;strokeWidth=1.7;endArrow=block;endFill=1;fontFamily=Microsoft YaHei, PingFang SC, Helvetica, Arial, sans-serif;fontSize=11;fontColor=#2D3436;labelBackgroundColor=#FFFFFF;exitX=1.0;exitY=0.5;exitDx=0;exitDy=0;entryX=0.0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="s5" target="s6">
+        <mxCell id="e4" edge="1" parent="1" source="s4" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#9B2C2C;strokeWidth=1.2;endArrow=classic;endFill=1;fontFamily=Microsoft YaHei, PingFang SC, Helvetica Neue, Arial, sans-serif;fontSize=10;fontColor=#2D3748;labelBackgroundColor=#FFFFFF;exitX=1.0;exitY=0.5;exitDx=0;exitDy=0;entryX=0.0;entryY=0.5;entryDx=0;entryDy=0;dashed=1;dashPattern=5 3;" target="s5" value="止损转向重排">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="e6" value="哈希核验与方案冻结" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#59A14F;strokeWidth=1.8;endArrow=block;endFill=1;fontFamily=Microsoft YaHei, PingFang SC, Helvetica, Arial, sans-serif;fontSize=11;fontColor=#2D3436;labelBackgroundColor=#FFFFFF;exitX=1.0;exitY=0.5;exitDx=0;exitDy=0;entryX=0.0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="s6" target="s7">
+        <mxCell id="e5" edge="1" parent="1" source="s5" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#2C5282;strokeWidth=1.4;endArrow=classic;endFill=1;fontFamily=Microsoft YaHei, PingFang SC, Helvetica Neue, Arial, sans-serif;fontSize=10;fontColor=#2D3748;labelBackgroundColor=#FFFFFF;exitX=1.0;exitY=0.5;exitDx=0;exitDy=0;entryX=0.0;entryY=0.5;entryDx=0;entryDy=0;" target="s6" value="核验冻结">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="legend_box_0" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#EBF2F7;strokeColor=#4E79A7;strokeWidth=1.5;" vertex="1" parent="1">
-          <mxGeometry x="30" y="644" width="22" height="14" as="geometry" />
-        </mxCell>
-        <mxCell id="legend_lbl_0" value="基线与正式轮实验" style="text;html=1;align=left;verticalAlign=middle;strokeColor=none;fillColor=none;fontSize=11;fontColor=#2D3436;fontFamily=Microsoft YaHei, PingFang SC, Helvetica, Arial, sans-serif;" vertex="1" parent="1">
-          <mxGeometry x="58" y="640" width="176" height="22" as="geometry" />
-        </mxCell>
-        <mxCell id="legend_box_1" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FEF3E6;strokeColor=#F28E2B;strokeWidth=1.5;" vertex="1" parent="1">
-          <mxGeometry x="240" y="644" width="22" height="14" as="geometry" />
-        </mxCell>
-        <mxCell id="legend_lbl_1" value="核心消融与迭代优化" style="text;html=1;align=left;verticalAlign=middle;strokeColor=none;fillColor=none;fontSize=11;fontColor=#2D3436;fontFamily=Microsoft YaHei, PingFang SC, Helvetica, Arial, sans-serif;" vertex="1" parent="1">
-          <mxGeometry x="268" y="640" width="176" height="22" as="geometry" />
-        </mxCell>
-        <mxCell id="legend_box_2" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FDECEC;strokeColor=#E15759;strokeWidth=1.5;" vertex="1" parent="1">
-          <mxGeometry x="450" y="644" width="22" height="14" as="geometry" />
-        </mxCell>
-        <mxCell id="legend_lbl_2" value="负面实验与失败止损" style="text;html=1;align=left;verticalAlign=middle;strokeColor=none;fillColor=none;fontSize=11;fontColor=#2D3436;fontFamily=Microsoft YaHei, PingFang SC, Helvetica, Arial, sans-serif;" vertex="1" parent="1">
-          <mxGeometry x="478" y="640" width="176" height="22" as="geometry" />
-        </mxCell>
-        <mxCell id="legend_box_3" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#EAF5F4;strokeColor=#76B7B2;strokeWidth=1.5;" vertex="1" parent="1">
-          <mxGeometry x="660" y="644" width="22" height="14" as="geometry" />
-        </mxCell>
-        <mxCell id="legend_lbl_3" value="溯源补评与哈希核验" style="text;html=1;align=left;verticalAlign=middle;strokeColor=none;fillColor=none;fontSize=11;fontColor=#2D3436;fontFamily=Microsoft YaHei, PingFang SC, Helvetica, Arial, sans-serif;" vertex="1" parent="1">
-          <mxGeometry x="688" y="640" width="176" height="22" as="geometry" />
-        </mxCell>
-        <mxCell id="legend_box_4" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#EDF6EC;strokeColor=#59A14F;strokeWidth=1.5;" vertex="1" parent="1">
-          <mxGeometry x="870" y="644" width="22" height="14" as="geometry" />
-        </mxCell>
-        <mxCell id="legend_lbl_4" value="冻结交付决策" style="text;html=1;align=left;verticalAlign=middle;strokeColor=none;fillColor=none;fontSize=11;fontColor=#2D3436;fontFamily=Microsoft YaHei, PingFang SC, Helvetica, Arial, sans-serif;" vertex="1" parent="1">
-          <mxGeometry x="898" y="640" width="176" height="22" as="geometry" />
-        </mxCell>
-        <mxCell id="legend_box_5" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFF7F7;strokeColor=#CC3311;strokeWidth=1.5;dashed=1;" vertex="1" parent="1">
-          <mxGeometry x="1080" y="644" width="22" height="14" as="geometry" />
-        </mxCell>
-        <mxCell id="legend_lbl_5" value="评测口径与数据边界原则" style="text;html=1;align=left;verticalAlign=middle;strokeColor=none;fillColor=none;fontSize=11;fontColor=#2D3436;fontFamily=Microsoft YaHei, PingFang SC, Helvetica, Arial, sans-serif;" vertex="1" parent="1">
-          <mxGeometry x="1108" y="640" width="176" height="22" as="geometry" />
+        <mxCell id="footnote" parent="1" style="text;html=1;align=left;verticalAlign=middle;strokeColor=none;fillColor=none;fontSize=10;fontColor=#6C757D;fontFamily=Microsoft YaHei, PingFang SC, Helvetica Neue, Arial, sans-serif;" value="注：不同阶段的数据集与裁判口径（规则评分 / 原开发 AI 暂判 / GPT-6 事后联合口径 / 模型辅助溯源补评）严格分开统计，不跨表混算。" vertex="1">
+          <mxGeometry height="20" width="1018" x="20" y="362" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>

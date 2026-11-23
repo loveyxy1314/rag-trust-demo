@@ -1,14 +1,11 @@
 #!/usr/bin/env python3
-"""Generate academic-grade draw.io (.drawio) diagrams and matching true-text SVG previews.
+"""Generate publication-style draw.io (.drawio) diagrams and matching true-text SVG files.
 
-Color palette & styling follow a Science-style colorblind-friendly academic palette:
-  - Blue   (#4E79A7 / fill #EBF2F7): Input / Output / Data processing
-  - Orange (#F28E2B / fill #FEF3E6): Core defense / algorithm steps (bold border)
-  - Green  (#59A14F / fill #EDF6EC): Trusted storage / allow / verified output
-  - Yellow (#EDC948 / fill #FDF9E7): Decision gates (diamond)
-  - Red    (#E15759 / fill #FDECEC): Attacks / quarantine / review / negative results
-  - Gray   (#6C757D / fill #F4F5F7): Swimlanes / auxiliary containers
-  - Dashed Red (#CC3311): Security & evaluation isolation boundaries
+Visual design follows restrained IEEE / ACM / USENIX Security academic conventions:
+  - Neutral monochrome base (#FFFFFF / #F8F9FA, charcoal stroke #2B2D42) for standard components
+  - Single muted academic slate-blue (#EEF3F8 / #2C5282) for core defense / proposed mechanisms
+  - Single muted crimson (#FDF2F2 / #9B2C2C) for threat / rejection / isolation boundaries
+  - No baked-in slide titles or rainbow legends; crisp typography, compact spacing, true SVG text.
 
 Usage:
     python scripts/generate_diagrams.py
@@ -24,18 +21,18 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 OUT_DIR = ROOT / "docs" / "diagrams"
 
-FONT_FAMILY = "Microsoft YaHei, PingFang SC, Helvetica, Arial, sans-serif"
+FONT_FAMILY = "Microsoft YaHei, PingFang SC, Helvetica Neue, Arial, sans-serif"
 
+# Restrained 3-tone academic paper palette (Neutral + Slate Blue + Muted Crimson)
 PALETTE = {
-    "blue": ("#EBF2F7", "#4E79A7", "#1F3B57"),
-    "orange": ("#FEF3E6", "#F28E2B", "#7A4100"),
-    "green": ("#EDF6EC", "#59A14F", "#24541E"),
-    "yellow": ("#FDF9E7", "#D4A017", "#6B4E00"),
-    "red": ("#FDECEC", "#E15759", "#7F1D1D"),
-    "gray": ("#F4F5F7", "#6C757D", "#2D3436"),
-    "teal": ("#EAF5F4", "#76B7B2", "#1F4E4A"),
-    "purple": ("#F4EFF5", "#B07AA1", "#4A2545"),
-    "boundary": ("#FFF7F7", "#CC3311", "#A61C00"),
+    "neutral": ("#FFFFFF", "#343A40", "#1A202C"),
+    "subtle": ("#F8F9FA", "#6C757D", "#2D3748"),
+    "container": ("#FAFAFB", "#ADB5BD", "#495057"),
+    "accent": ("#EEF3F8", "#2C5282", "#1A365D"),
+    "decision": ("#FFFFFF", "#2C5282", "#1A365D"),
+    "alert": ("#FDF2F2", "#9B2C2C", "#742A2A"),
+    "boundary": ("#FFFDFD", "#9B2C2C", "#9B2C2C"),
+    "note": ("none", "none", "#495057"),
 }
 
 
@@ -47,12 +44,12 @@ class Box:
     w: int
     h: int
     label: str
-    theme: str = "blue"
-    shape: str = "roundrect"  # roundrect | diamond | container | cylinder | banner
-    stroke_width: float = 1.5
+    theme: str = "neutral"
+    shape: str = "roundrect"  # roundrect | diamond | container | cylinder | note
+    stroke_width: float = 1.2
     dashed: bool = False
-    font_size: int = 12
-    bold: bool = False
+    font_size: int = 11
+    bold_first: bool = True
     align: str = "center"  # center | left
 
 
@@ -62,25 +59,25 @@ class Edge:
     src: str
     dst: str
     label: str = ""
-    color: str = "#495057"
+    color: str = "#343A40"
     dashed: bool = False
-    stroke_width: float = 1.5
+    stroke_width: float = 1.2
     src_anchor: str = "auto"  # top | bottom | left | right | auto
     dst_anchor: str = "auto"
     waypoints: list[tuple[int, int]] = field(default_factory=list)
-    label_offset: tuple[int, int] = (0, -8)
+    label_offset: tuple[int, int] = (0, -7)
+    label_seg: int | None = None
 
 
 @dataclass
 class DiagramSpec:
     slug: str
-    title: str
-    subtitle: str
+    name: str
     width: int
     height: int
     boxes: list[Box]
     edges: list[Edge]
-    legend_items: list[tuple[str, str, bool]]  # (theme, label, dashed)
+    footnote: str = ""
 
 
 def _anchor_point(box: Box, side: str) -> tuple[float, float]:
@@ -104,12 +101,7 @@ def _auto_anchors(src: Box, dst: Box) -> tuple[str, str]:
 
 
 def _drawio_anchor_style(side: str, prefix: str) -> str:
-    mapping = {
-        "top": (0.5, 0.0),
-        "bottom": (0.5, 1.0),
-        "left": (0.0, 0.5),
-        "right": (1.0, 0.5),
-    }
+    mapping = {"top": (0.5, 0.0), "bottom": (0.5, 1.0), "left": (0.0, 0.5), "right": (1.0, 0.5)}
     x, y = mapping[side]
     return f"{prefix}X={x};{prefix}Y={y};{prefix}Dx=0;{prefix}Dy=0;"
 
@@ -126,45 +118,51 @@ def _box_drawio_style(box: Box) -> str:
         "whiteSpace=wrap",
         "html=1",
     ]
-    if box.bold:
-        parts.append("fontStyle=1")
     if box.dashed:
-        parts.append("dashed=1")
-        parts.append("dashPattern=6 4")
+        parts.extend(["dashed=1", "dashPattern=5 3"])
 
     if box.shape == "diamond":
         parts.insert(0, "rhombus")
     elif box.shape == "cylinder":
-        parts.insert(0, "shape=cylinder3;boundedLbl=1;backgroundOutline=1;size=10")
+        parts.insert(0, "shape=cylinder3;boundedLbl=1;backgroundOutline=1;size=8")
     elif box.shape == "container":
-        parts.insert(0, "rounded=1;arcSize=6")
-        parts.extend(["verticalAlign=top", "align=left", "spacingTop=6", "spacingLeft=10"])
-    elif box.shape == "banner":
+        parts.insert(0, "rounded=1;arcSize=4")
+        parts.extend(["verticalAlign=top", "align=left", "spacingTop=5", "spacingLeft=9", "fontStyle=1"])
+    elif box.shape == "note":
         parts.insert(0, "rounded=0")
-        parts.extend(["strokeColor=none", "fillColor=none"])
+        parts.extend(["strokeColor=none", "fillColor=none", "align=left"])
     else:
-        parts.insert(0, "rounded=1;arcSize=12")
+        parts.insert(0, "rounded=1;arcSize=6")
         if box.align == "left":
-            parts.extend(["align=left", "spacingLeft=10", "spacingRight=8"])
+            parts.extend(["align=left", "spacingLeft=9", "spacingRight=6"])
     return ";".join(parts) + ";"
 
 
+def _format_drawio_label(box: Box) -> str:
+    lines = box.label.split("\n")
+    formatted = []
+    for idx, line in enumerate(lines):
+        esc = html.escape(line)
+        if box.shape == "container":
+            formatted.append(esc)
+        elif idx == 0 and box.bold_first and len(lines) > 1:
+            formatted.append(f"<b>{esc}</b>")
+        elif idx > 0:
+            formatted.append(f'<font style="font-size:{max(9.5, box.font_size - 1):.1f}px" color="#4A5568">{esc}</font>')
+        else:
+            formatted.append(f"<b>{esc}</b>" if box.bold_first else esc)
+    return "<br>".join(formatted)
+
+
 def build_drawio_xml(spec: DiagramSpec) -> str:
-    mxfile = ET.Element(
-        "mxfile",
-        {
-            "host": "app.diagrams.net",
-            "agent": "rag-trust-demo/generate_diagrams.py",
-            "version": "24.7.17",
-        },
-    )
-    diagram = ET.SubElement(mxfile, "diagram", {"id": spec.slug, "name": spec.title})
+    mxfile = ET.Element("mxfile", {"host": "app.diagrams.net", "agent": "rag-trust-demo", "version": "24.7.17"})
+    diagram = ET.SubElement(mxfile, "diagram", {"id": spec.slug, "name": spec.name})
     model = ET.SubElement(
         diagram,
         "mxGraphModel",
         {
-            "dx": "1200",
-            "dy": "800",
+            "dx": "1100",
+            "dy": "650",
             "grid": "1",
             "gridSize": "10",
             "guides": "1",
@@ -185,55 +183,16 @@ def build_drawio_xml(spec: DiagramSpec) -> str:
     ET.SubElement(root, "mxCell", {"id": "0"})
     ET.SubElement(root, "mxCell", {"id": "1", "parent": "0"})
 
-    # Title + subtitle cells
-    title_cell = ET.SubElement(
-        root,
-        "mxCell",
-        {
-            "id": "title_main",
-            "value": f"<b>{html.escape(spec.title)}</b>",
-            "style": f"text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=0;strokeColor=none;fillColor=none;fontSize=18;fontColor=#1D3557;fontFamily={FONT_FAMILY};",
-            "vertex": "1",
-            "parent": "1",
-        },
-    )
-    ET.SubElement(
-        title_cell,
-        "mxGeometry",
-        {"x": "20", "y": "12", "width": str(spec.width - 40), "height": "30", "as": "geometry"},
-    )
-
-    sub_cell = ET.SubElement(
-        root,
-        "mxCell",
-        {
-            "id": "title_sub",
-            "value": html.escape(spec.subtitle),
-            "style": f"text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=0;strokeColor=none;fillColor=none;fontSize=11;fontColor=#5A626A;fontFamily={FONT_FAMILY};",
-            "vertex": "1",
-            "parent": "1",
-        },
-    )
-    ET.SubElement(
-        sub_cell,
-        "mxGeometry",
-        {"x": "20", "y": "42", "width": str(spec.width - 40), "height": "22", "as": "geometry"},
-    )
-
     box_map = {b.id: b for b in spec.boxes}
+    ordered = [b for b in spec.boxes if b.shape == "container"] + [b for b in spec.boxes if b.shape != "container"]
 
-    # Draw containers first so foreground boxes appear above them
-    ordered_boxes = [b for b in spec.boxes if b.shape == "container"] + [
-        b for b in spec.boxes if b.shape != "container"
-    ]
-    for b in ordered_boxes:
-        val = "<br>".join(html.escape(line) for line in b.label.split("\n"))
+    for b in ordered:
         cell = ET.SubElement(
             root,
             "mxCell",
             {
                 "id": b.id,
-                "value": val,
+                "value": _format_drawio_label(b),
                 "style": _box_drawio_style(b),
                 "vertex": "1",
                 "parent": "1",
@@ -245,7 +204,6 @@ def build_drawio_xml(spec: DiagramSpec) -> str:
             {"x": str(b.x), "y": str(b.y), "width": str(b.w), "height": str(b.h), "as": "geometry"},
         )
 
-    # Edges
     for e in spec.edges:
         src_b, dst_b = box_map[e.src], box_map[e.dst]
         s_anc, d_anc = _auto_anchors(src_b, dst_b)
@@ -255,14 +213,14 @@ def build_drawio_xml(spec: DiagramSpec) -> str:
             d_anc = e.dst_anchor
 
         style = (
-            "edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;"
-            f"strokeColor={e.color};strokeWidth={e.stroke_width};endArrow=block;endFill=1;"
-            f"fontFamily={FONT_FAMILY};fontSize=11;fontColor=#2D3436;labelBackgroundColor=#FFFFFF;"
+            "edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;"
+            f"strokeColor={e.color};strokeWidth={e.stroke_width};endArrow=classic;endFill=1;"
+            f"fontFamily={FONT_FAMILY};fontSize=10;fontColor=#2D3748;labelBackgroundColor=#FFFFFF;"
             + _drawio_anchor_style(s_anc, "exit")
             + _drawio_anchor_style(d_anc, "entry")
         )
         if e.dashed:
-            style += "dashed=1;dashPattern=6 4;"
+            style += "dashed=1;dashPattern=5 3;"
         cell = ET.SubElement(
             root,
             "mxCell",
@@ -282,43 +240,22 @@ def build_drawio_xml(spec: DiagramSpec) -> str:
             for wx, wy in e.waypoints:
                 ET.SubElement(arr, "mxPoint", {"x": str(wx), "y": str(wy)})
 
-    # Legend bar at bottom
-    ly = spec.height - 42
-    lx = 30
-    item_w = max(145, (spec.width - 60) // max(1, len(spec.legend_items)))
-    for idx, (theme, text, dashed) in enumerate(spec.legend_items):
-        fill, stroke, _ = PALETTE[theme]
-        sw = ET.SubElement(
+    if spec.footnote:
+        fn = ET.SubElement(
             root,
             "mxCell",
             {
-                "id": f"legend_box_{idx}",
-                "value": "",
-                "style": f"rounded=1;whiteSpace=wrap;html=1;fillColor={fill};strokeColor={stroke};strokeWidth=1.5;{'dashed=1;' if dashed else ''}",
+                "id": "footnote",
+                "value": html.escape(spec.footnote),
+                "style": f"text;html=1;align=left;verticalAlign=middle;strokeColor=none;fillColor=none;fontSize=10;fontColor=#6C757D;fontFamily={FONT_FAMILY};",
                 "vertex": "1",
                 "parent": "1",
             },
         )
         ET.SubElement(
-            sw,
+            fn,
             "mxGeometry",
-            {"x": str(lx + idx * item_w), "y": str(ly + 6), "width": "22", "height": "14", "as": "geometry"},
-        )
-        lbl = ET.SubElement(
-            root,
-            "mxCell",
-            {
-                "id": f"legend_lbl_{idx}",
-                "value": html.escape(text),
-                "style": f"text;html=1;align=left;verticalAlign=middle;strokeColor=none;fillColor=none;fontSize=11;fontColor=#2D3436;fontFamily={FONT_FAMILY};",
-                "vertex": "1",
-                "parent": "1",
-            },
-        )
-        ET.SubElement(
-            lbl,
-            "mxGeometry",
-            {"x": str(lx + idx * item_w + 28), "y": str(ly + 2), "width": str(item_w - 34), "height": "22", "as": "geometry"},
+            {"x": "20", "y": str(spec.height - 26), "width": str(spec.width - 40), "height": "20", "as": "geometry"},
         )
 
     ET.indent(mxfile, space="  ")
@@ -326,101 +263,77 @@ def build_drawio_xml(spec: DiagramSpec) -> str:
 
 
 def build_svg(spec: DiagramSpec) -> str:
-    """Render matching crisp true-text vector SVG directly from the same DiagramSpec."""
     parts = [
         '<?xml version="1.0" encoding="UTF-8"?>',
         f'<svg xmlns="http://www.w3.org/2000/svg" width="{spec.width}" height="{spec.height}" viewBox="0 0 {spec.width} {spec.height}">',
         "  <defs>",
     ]
-    # Arrowhead markers for each distinct edge color
-    edge_colors = sorted({e.color for e in spec.edges})
-    for c in edge_colors:
+    for c in sorted({e.color for e in spec.edges}):
         cid = c.lstrip("#")
         parts.append(
-            f'    <marker id="arrow-{cid}" viewBox="0 0 10 10" refX="9" refY="5" '
-            f'markerWidth="7" markerHeight="7" orient="auto-start-reverse">'
-            f'<path d="M 0 1.5 L 10 5 L 0 8.5 z" fill="{c}"/></marker>'
+            f'    <marker id="arr-{cid}" viewBox="0 0 10 10" refX="8.5" refY="5" '
+            f'markerWidth="6.5" markerHeight="6.5" orient="auto-start-reverse">'
+            f'<path d="M 0 1.8 L 9 5 L 0 8.2 z" fill="{c}"/></marker>'
         )
     parts.append("  </defs>")
     parts.append(f'  <rect x="0" y="0" width="{spec.width}" height="{spec.height}" fill="#FFFFFF"/>')
 
-    # Title and subtitle
-    parts.append(
-        f'  <text x="{spec.width/2:.1f}" y="33" text-anchor="middle" '
-        f'font-family="{FONT_FAMILY}" font-size="18" font-weight="700" fill="#1D3557">'
-        f'{html.escape(spec.title)}</text>'
-    )
-    parts.append(
-        f'  <text x="{spec.width/2:.1f}" y="56" text-anchor="middle" '
-        f'font-family="{FONT_FAMILY}" font-size="11.5" fill="#5A626A">'
-        f'{html.escape(spec.subtitle)}</text>'
-    )
-
     box_map = {b.id: b for b in spec.boxes}
-    ordered_boxes = [b for b in spec.boxes if b.shape == "container"] + [
-        b for b in spec.boxes if b.shape != "container"
-    ]
+    ordered = [b for b in spec.boxes if b.shape == "container"] + [b for b in spec.boxes if b.shape != "container"]
 
-    for b in ordered_boxes:
+    for b in ordered:
         fill, stroke, font_color = PALETTE[b.theme]
-        dash = ' stroke-dasharray="6,4"' if b.dashed else ""
+        dash = ' stroke-dasharray="5,3"' if b.dashed else ""
         if b.shape == "diamond":
             cx, cy = b.x + b.w / 2, b.y + b.h / 2
-            pts = f"{cx},{b.y} {b.x+b.w},{cy} {cx},{b.y+b.h} {b.x},{cy}"
+            pts = f"{cx:.1f},{b.y} {b.x+b.w},{cy:.1f} {cx:.1f},{b.y+b.h} {b.x},{cy:.1f}"
             parts.append(
-                f'  <polygon points="{pts}" fill="{fill}" stroke="{stroke}" '
-                f'stroke-width="{b.stroke_width}"{dash}/>'
+                f'  <polygon points="{pts}" fill="{fill}" stroke="{stroke}" stroke-width="{b.stroke_width}"{dash}/>'
             )
         elif b.shape == "cylinder":
-            rx = b.w / 2
-            ry = 9
+            rx, ry = b.w / 2, 7.5
             parts.append(
-                f'  <path d="M {b.x} {b.y+ry} '
-                f'A {rx} {ry} 0 0 1 {b.x+b.w} {b.y+ry} '
-                f'L {b.x+b.w} {b.y+b.h-ry} '
-                f'A {rx} {ry} 0 0 1 {b.x} {b.y+b.h-ry} Z" '
+                f'  <path d="M {b.x} {b.y+ry} A {rx} {ry} 0 0 1 {b.x+b.w} {b.y+ry} '
+                f'L {b.x+b.w} {b.y+b.h-ry} A {rx} {ry} 0 0 1 {b.x} {b.y+b.h-ry} Z" '
                 f'fill="{fill}" stroke="{stroke}" stroke-width="{b.stroke_width}"{dash}/>'
             )
             parts.append(
                 f'  <ellipse cx="{b.x+rx}" cy="{b.y+ry}" rx="{rx}" ry="{ry}" '
                 f'fill="{fill}" stroke="{stroke}" stroke-width="{b.stroke_width}"/>'
             )
-        else:
-            rx = 6 if b.shape == "container" else 8
+        elif b.shape != "note":
+            rx = 3 if b.shape == "container" else 4
             parts.append(
                 f'  <rect x="{b.x}" y="{b.y}" width="{b.w}" height="{b.h}" rx="{rx}" ry="{rx}" '
                 f'fill="{fill}" stroke="{stroke}" stroke-width="{b.stroke_width}"{dash}/>'
             )
 
         lines = b.label.split("\n")
-        line_h = b.font_size * 1.38
+        line_h = b.font_size * 1.42
         if b.shape == "container":
-            tx = b.x + 12
-            ty = b.y + 20
-            for idx, line in enumerate(lines):
-                fw = "700" if idx == 0 else "400"
-                parts.append(
-                    f'  <text x="{tx}" y="{ty + idx * line_h:.1f}" text-anchor="start" '
-                    f'font-family="{FONT_FAMILY}" font-size="{b.font_size}" font-weight="{fw}" fill="{font_color}">'
-                    f'{html.escape(line)}</text>'
-                )
+            parts.append(
+                f'  <text x="{b.x + 10}" y="{b.y + 18}" text-anchor="start" '
+                f'font-family="{FONT_FAMILY}" font-size="{b.font_size}" font-weight="600" fill="{font_color}">'
+                f'{html.escape(lines[0])}</text>'
+            )
         else:
             total_h = (len(lines) - 1) * line_h
             start_y = b.y + b.h / 2 - total_h / 2 + b.font_size * 0.35
             if b.shape == "cylinder":
-                start_y += 5
+                start_y += 4
             anchor = "start" if b.align == "left" else "middle"
-            tx = b.x + 12 if b.align == "left" else b.x + b.w / 2
+            tx = b.x + 10 if b.align == "left" else b.x + b.w / 2
             for idx, line in enumerate(lines):
-                fw = "700" if (b.bold or (idx == 0 and len(lines) > 1)) else "400"
-                fs = b.font_size if idx == 0 else max(10.5, b.font_size - 1)
+                is_title = (idx == 0 and b.bold_first)
+                fw = "600" if is_title else "400"
+                fs = b.font_size if idx == 0 else max(9.5, b.font_size - 1)
+                col = font_color if idx == 0 else "#4A5568"
                 parts.append(
                     f'  <text x="{tx:.1f}" y="{start_y + idx * line_h:.1f}" text-anchor="{anchor}" '
-                    f'font-family="{FONT_FAMILY}" font-size="{fs}" font-weight="{fw}" fill="{font_color}">'
+                    f'font-family="{FONT_FAMILY}" font-size="{fs}" font-weight="{fw}" fill="{col}">'
                     f'{html.escape(line)}</text>'
                 )
 
-    # Edges
     for e in spec.edges:
         src_b, dst_b = box_map[e.src], box_map[e.dst]
         s_anc, d_anc = _auto_anchors(src_b, dst_b)
@@ -428,7 +341,6 @@ def build_svg(spec: DiagramSpec) -> str:
             s_anc = e.src_anchor
         if e.dst_anchor != "auto":
             d_anc = e.dst_anchor
-
         p0 = _anchor_point(src_b, s_anc)
         p1 = _anchor_point(dst_b, d_anc)
         pts: list[tuple[float, float]] = [p0]
@@ -448,48 +360,32 @@ def build_svg(spec: DiagramSpec) -> str:
         pts.append(p1)
 
         d_str = "M " + " L ".join(f"{x:.1f} {y:.1f}" for x, y in pts)
-        dash = ' stroke-dasharray="6,4"' if e.dashed else ""
+        dash = ' stroke-dasharray="5,3"' if e.dashed else ""
         cid = e.color.lstrip("#")
         parts.append(
-            f'  <path d="{d_str}" fill="none" stroke="{e.color}" '
-            f'stroke-width="{e.stroke_width}"{dash} marker-end="url(#arrow-{cid})"/>'
+            f'  <path d="{d_str}" fill="none" stroke="{e.color}" stroke-width="{e.stroke_width}"{dash} marker-end="url(#arr-{cid})"/>'
         )
         if e.label:
-            # Place label on the longest segment
-            best_seg = max(
+            seg = e.label_seg if e.label_seg is not None else max(
                 range(len(pts) - 1),
                 key=lambda i: math.hypot(pts[i + 1][0] - pts[i][0], pts[i + 1][1] - pts[i][1]),
             )
-            lx = (pts[best_seg][0] + pts[best_seg + 1][0]) / 2 + e.label_offset[0]
-            ly = (pts[best_seg][1] + pts[best_seg + 1][1]) / 2 + e.label_offset[1]
-            # Subtle white pill background behind edge label for crisp legibility
-            est_w = max(36, len(e.label) * 9.5 + 10)
+            lx = (pts[seg][0] + pts[seg + 1][0]) / 2 + e.label_offset[0]
+            ly = (pts[seg][1] + pts[seg + 1][1]) / 2 + e.label_offset[1]
+            est_w = max(28, sum(10 if ord(ch) > 127 else 6 for ch in e.label) + 10)
             parts.append(
-                f'  <rect x="{lx - est_w/2:.1f}" y="{ly - 11:.1f}" width="{est_w:.1f}" height="16" '
-                f'rx="3" fill="#FFFFFF" fill-opacity="0.92"/>'
+                f'  <rect x="{lx - est_w/2:.1f}" y="{ly - 10:.1f}" width="{est_w:.1f}" height="14" '
+                f'rx="2" fill="#FFFFFF" fill-opacity="0.95"/>'
             )
             parts.append(
-                f'  <text x="{lx:.1f}" y="{ly + 1:.1f}" text-anchor="middle" '
-                f'font-family="{FONT_FAMILY}" font-size="10.5" font-weight="600" fill="{e.color}">'
-                f'{html.escape(e.label)}</text>'
+                f'  <text x="{lx:.1f}" y="{ly + 0.5:.1f}" text-anchor="middle" '
+                f'font-family="{FONT_FAMILY}" font-size="9.8" fill="{e.color}">{html.escape(e.label)}</text>'
             )
 
-    # Legend bar
-    ly = spec.height - 40
-    parts.append(f'  <line x1="28" y1="{ly - 8}" x2="{spec.width - 28}" y2="{ly - 8}" stroke="#DEE2E6" stroke-width="1"/>')
-    lx = 34
-    item_w = max(148, (spec.width - 68) // max(1, len(spec.legend_items)))
-    for idx, (theme, text, dashed) in enumerate(spec.legend_items):
-        fill, stroke, _ = PALETTE[theme]
-        dash = ' stroke-dasharray="4,3"' if dashed else ""
-        bx = lx + idx * item_w
+    if spec.footnote:
         parts.append(
-            f'  <rect x="{bx}" y="{ly + 4}" width="22" height="14" rx="3" '
-            f'fill="{fill}" stroke="{stroke}" stroke-width="1.5"{dash}/>'
-        )
-        parts.append(
-            f'  <text x="{bx + 29}" y="{ly + 15}" text-anchor="start" '
-            f'font-family="{FONT_FAMILY}" font-size="11" fill="#2D3436">{html.escape(text)}</text>'
+            f'  <text x="20" y="{spec.height - 12}" text-anchor="start" '
+            f'font-family="{FONT_FAMILY}" font-size="9.8" fill="#6C757D">{html.escape(spec.footnote)}</text>'
         )
 
     parts.append("</svg>\n")
@@ -497,253 +393,213 @@ def build_svg(spec: DiagramSpec) -> str:
 
 
 def make_fig1_architecture() -> DiagramSpec:
+    """Compact IEEE/USENIX-style 3-zone system architecture (Modules A-F)."""
     boxes = [
-        # Containers
-        Box("c_offline", 28, 76, 300, 560, "离线入库与基线层（模块 A / B / E-Index）", "gray", "container", 1.2, True, 12, True),
-        Box("c_online", 352, 76, 650, 560, "在线检索、三层可信筛查与受控生成（模块 B / C / D / E）", "gray", "container", 1.2, True, 12, True),
-        Box("c_eval", 1026, 76, 266, 560, "审计与离线评价层（模块 F）", "gray", "container", 1.2, True, 12, True),
-        Box("c_iso", 1044, 412, 230, 206, "评价隔离边界（evaluation_only）", "boundary", "container", 2.0, True, 11.5, True),
+        # Three clean dashed containers
+        Box("c_off", 20, 18, 224, 412, "(a) 离线基线与索引层", "container", "container", 1.0, True, 11),
+        Box("c_on", 268, 18, 536, 412, "(b) 在线三层筛查与受控生成", "container", "container", 1.0, True, 11),
+        Box("c_ev", 828, 18, 192, 412, "(c) 审计与评价层", "container", "container", 1.0, True, 11),
 
-        # Offline boxes
-        Box("a_corpus", 48, 120, 260, 108, "模块 A：知识库与投毒构建\nsrc/dataset.py\n50 Linux 事实 × 8 模板 = 400 正常文档\n200 投毒文档（I1/I2 注入 + F1/F2 错事实）", "blue", "roundrect", 1.5, False, 11.5),
-        Box("b_manifest", 48, 272, 260, 96, "模块 B：SHA-256 基线清单\nsrc/integrity.py\n仅存储 doc_id → sha256(text)\n不含 label / source 评价字段", "green", "cylinder", 1.6, False, 11.5),
-        Box("e_index", 48, 412, 260, 98, "模块 E：语义检索索引\nsrc/retriever.py\nBAAI/bge-small-zh-v1.5 向量检索\n无 GPU 时自动回退 TF-IDF", "blue", "roundrect", 1.5, False, 11.5),
-        Box("cfg_box", 48, 540, 260, 76, "冻结配置与随机种子\nconfigs/config.yaml (seed=42)\n阈值 / 组别 / 场景 / 快照集中管理", "teal", "roundrect", 1.3, False, 11),
+        # Offline
+        Box("m_a", 36, 56, 192, 74, "知识库构建 (模块 A)\n50 Linux 事实 · 400 正常文档\n200 投毒 (I1/I2 注入, F1/F2 错事实)", "neutral", "roundrect", 1.2, False, 10.5),
+        Box("m_b", 36, 166, 192, 74, "SHA-256 基线清单 (模块 B)\n仅含 doc_id → sha256(text)\n不含标签与来源属性", "subtle", "cylinder", 1.2, False, 10.5),
+        Box("m_idx", 36, 276, 192, 66, "语义检索索引 (模块 E)\nbge-small-zh-v1.5\n离线自动回退 TF-IDF", "neutral", "roundrect", 1.2, False, 10.5),
+        Box("m_cfg", 36, 364, 192, 48, "冻结配置 (seed=42)\n阈值 · 组别 · 模型快照", "subtle", "roundrect", 1.0, True, 10),
 
-        # Online boxes
-        Box("q_in", 378, 118, 228, 72, "用户问题输入\n24 冻结题 / 97 开发题 / 56 API 挑战题", "blue", "roundrect", 1.6, False, 11.5, True),
-        Box("ret_topk", 648, 118, 326, 72, "Top-5 候选文档检索\n返回 (doc_id, text, source, retrieval_score)", "blue", "roundrect", 1.5, False, 11.5),
+        # Online
+        Box("q_in", 290, 56, 174, 52, "用户查询输入\n24 冻结 / 97 开发 / 56 API", "neutral", "roundrect", 1.2, False, 10.5),
+        Box("topk", 520, 56, 260, 52, "Top-5 候选文档检索\n返回 (doc_id, text, source, score)", "neutral", "roundrect", 1.2, False, 10.5),
 
-        Box("g_integrity", 378, 234, 182, 92, "层 1：完整性校验\nsrc/integrity.py\n比对 SHA-256 基线\npass / fail / missing", "orange", "roundrect", 2.2, False, 11.5),
-        Box("g_prov", 584, 234, 182, 92, "层 2：来源规则评估\nsrc/provenance.py\n白名单 / 未列 / 未知 / 伪冒\nallow / review", "orange", "roundrect", 2.2, False, 11.5),
-        Box("g_sem", 790, 234, 184, 92, "层 3：双分支语义检测\nsrc/semantic_detector.py\nQwen2.5-1.5B (split-v6)\n行为指令 + 事实一致性", "orange", "roundrect", 2.2, False, 11.5),
+        # Three core defense modules (single muted slate-blue accent)
+        Box("d_int", 290, 148, 152, 74, "① 完整性校验\nsrc/integrity.py\npass / fail / missing", "accent", "roundrect", 1.6, False, 10.5),
+        Box("d_prv", 464, 148, 152, 74, "② 来源评估 (模块 C)\nsrc/provenance.py\n白名单 / 未列 / 未知", "accent", "roundrect", 1.6, False, 10.5),
+        Box("d_sem", 638, 148, 148, 74, "③ 语义检测 (模块 D)\nQwen2.5-1.5B (split-v6)\n指令 + 事实双分支", "accent", "roundrect", 1.6, False, 10.5),
 
-        Box("gate_dec", 590, 368, 170, 82, "最终处置决策\nallow / review /\nquarantine", "yellow", "diamond", 1.8, False, 11.5, True),
-        Box("block_box", 802, 376, 172, 66, "拦截并排除出上下文\nreview & quarantine\n保守策略不送入生成器", "red", "roundrect", 1.6, False, 11),
+        Box("gate", 482, 252, 116, 56, "处置网关", "decision", "diamond", 1.3, False, 10.5),
+        Box("blk", 648, 256, 138, 48, "拦截排除出上下文\nreview / quarantine", "alert", "roundrect", 1.3, False, 10.2),
 
-        Box("ctx_box", 378, 492, 276, 112, "受控上下文构建与可选扩展\n仅 allow 文档（≤3600 字符）\n默认：完整段落证据（src/paragraph_selector.py）\n候选扩展：BGE 重排 / 句界数据标记", "green", "roundrect", 1.6, False, 11),
-        Box("gen_box", 696, 492, 278, 112, "受控生成与程序拒答\nsrc/rag_pipeline.py\nQwen2.5-1.5B-Instruct (FP16, temp=0)\n数据/指令隔离提示词；空上下文→“证据不足”", "green", "roundrect", 1.8, False, 11),
+        Box("ctx", 290, 336, 226, 74, "受控上下文构建\n仅 allow 文档 (≤3600 字符)\n默认：完整段落 (候选：重排/标记)", "neutral", "roundrect", 1.2, False, 10.2),
+        Box("gen", 554, 336, 232, 74, "受控生成 (模块 E)\nQwen2.5-1.5B-Instruct (FP16)\n数据指令隔离；空上下文→拒答", "accent", "roundrect", 1.4, False, 10.2),
 
-        # Evaluation boxes
-        Box("audit_log", 1044, 120, 230, 108, "全链路审计日志\nraw.jsonl / detect_eval.jsonl\n逐文档记录完整性、来源、\n语义分数、缓存命中与分阶段耗时", "green", "cylinder", 1.6, False, 11),
-        Box("metrics_box", 1044, 266, 230, 110, "自动化指标与图表重算\nsrc/metrics.py & analyze_results.py\nASR(被攻击/暴露)、正确率、\nP/R/F1/FPR、误伤与 P95 时延", "blue", "roundrect", 1.5, False, 11),
-        Box("iso_inner", 1060, 456, 198, 142, "仅用于离线评分与审计：\n• label (benign/malicious)\n• attack_type (I1/I2/F1/F2)\n• payload & expected_terms\n严禁传入检测器与生成器", "red", "roundrect", 1.4, False, 10.8),
+        # Audit & evaluation
+        Box("log", 844, 56, 160, 74, "全链路审计日志\nraw.jsonl / detect_eval\n处置 · 缓存 · 分阶段耗时", "subtle", "cylinder", 1.2, False, 10.2),
+        Box("met", 844, 166, 160, 72, "离线指标重算 (模块 F)\nASR · 正确率 · P/R/F1\nFPR · 误伤 · P95 时延", "neutral", "roundrect", 1.2, False, 10.2),
+        Box("iso", 844, 286, 160, 124, "评价隔离边界\nevaluation_only\nlabel · attack_type · payload\n严禁进入检测与生成输入", "boundary", "roundrect", 1.5, True, 10.2),
     ]
 
     edges = [
-        Edge("e1", "a_corpus", "b_manifest", "计算基线哈希", "#4E79A7", False, 1.5, "bottom", "top"),
-        Edge("e2", "b_manifest", "e_index", "构建语料索引", "#4E79A7", False, 1.5, "bottom", "top"),
-        Edge("e3", "b_manifest", "g_integrity", "基线查验", "#59A14F", True, 1.5, "right", "left", [(340, 320), (340, 280)]),
-        Edge("e4", "e_index", "ret_topk", "向量/TF-IDF 召回", "#4E79A7", True, 1.5, "right", "bottom", [(334, 461), (334, 210), (811, 210)]),
-        Edge("e5", "q_in", "ret_topk", "编码检索", "#4E79A7", False, 1.6, "right", "left"),
-        Edge("e6", "ret_topk", "g_integrity", "Top-5 候选", "#495057", False, 1.6, "bottom", "top", [(811, 204), (469, 204)]),
-        Edge("e7", "g_integrity", "g_prov", "pass", "#F28E2B", False, 1.8, "right", "left"),
-        Edge("e8", "g_prov", "g_sem", "allow", "#F28E2B", False, 1.8, "right", "left"),
-        Edge("e9", "g_sem", "gate_dec", "风险评分", "#F28E2B", False, 1.8, "bottom", "top", [(882, 348), (675, 348)]),
-        Edge("e10", "gate_dec", "block_box", "review / quarantine", "#E15759", False, 1.6, "right", "left"),
-        Edge("e11", "gate_dec", "ctx_box", "allow 放行", "#59A14F", False, 1.8, "left", "top", [(516, 409)]),
-        Edge("e12", "ctx_box", "gen_box", "受控上下文", "#59A14F", False, 1.8, "right", "left"),
-        Edge("e13", "gen_box", "audit_log", "写入回答与审计", "#59A14F", False, 1.6, "right", "left", [(1012, 548), (1012, 174)]),
-        Edge("e14", "audit_log", "metrics_box", "离线重算汇总", "#4E79A7", False, 1.6, "bottom", "top"),
-        Edge("e15", "iso_inner", "metrics_box", "离线真值比对", "#CC3311", True, 1.6, "top", "bottom"),
+        Edge("e1", "m_a", "m_b", "", "#343A40", False, 1.2, "bottom", "top"),
+        Edge("e2", "m_b", "m_idx", "", "#343A40", False, 1.2, "bottom", "top"),
+        Edge("e3", "m_b", "d_int", "基线查验", "#2C5282", True, 1.2, "right", "left", [(258, 203), (258, 185)], label_offset=(-2, -11), label_seg=2),
+        Edge("e4", "m_idx", "topk", "索引召回", "#495057", True, 1.1, "right", "bottom", [(248, 309), (248, 128), (650, 128)], label_offset=(-145, -8), label_seg=2),
+        Edge("e5", "q_in", "topk", "", "#343A40", False, 1.2, "right", "left"),
+        Edge("e6", "topk", "d_int", "Top-5", "#343A40", False, 1.2, "bottom", "top", [(650, 128), (366, 128)], label_offset=(0, -8), label_seg=1),
+        Edge("e7", "d_int", "d_prv", "pass", "#2C5282", False, 1.3, "right", "left"),
+        Edge("e8", "d_prv", "d_sem", "allow", "#2C5282", False, 1.3, "right", "left"),
+        Edge("e9", "d_sem", "gate", "", "#2C5282", False, 1.3, "bottom", "top", [(712, 236), (540, 236)]),
+        Edge("e10", "gate", "blk", "拦截", "#9B2C2C", False, 1.2, "right", "left"),
+        Edge("e11", "gate", "ctx", "allow", "#2C5282", False, 1.3, "left", "top", [(403, 280)], label_offset=(0, -8), label_seg=0),
+        Edge("e12", "ctx", "gen", "", "#343A40", False, 1.2, "right", "left"),
+        Edge("e13", "gen", "log", "写入审计", "#343A40", False, 1.2, "right", "left", [(814, 373), (814, 93)], label_offset=(0, 0), label_seg=1),
+        Edge("e14", "log", "met", "", "#343A40", False, 1.2, "bottom", "top"),
+        Edge("e15", "iso", "met", "离线核验", "#9B2C2C", True, 1.2, "top", "bottom", label_offset=(30, 0)),
     ]
 
-    legend = [
-        ("blue", "输入 / 检索 / 数据处理", False),
-        ("orange", "核心防御模块（加粗）", False),
-        ("yellow", "处置决策网关", False),
-        ("green", "基线存储 / 放行 / 审计", False),
-        ("red", "隔离拦截 / 评价真值", False),
-        ("boundary", "评价隔离红线（防泄露）", True),
-    ]
     return DiagramSpec(
         slug="fig1_system_architecture",
-        title="图 1  RAG 知识库投毒检测与可信增强系统总体架构（模块 A–F）",
-        subtitle="离线基线构建 → 在线三层顺序筛查（SHA-256 + 来源规则 + 本地 1.5B 双分支语义检测）→ 受控生成与隔离审计闭环",
-        width=1320,
-        height=700,
+        name="图1_系统总体架构",
+        width=1040,
+        height=460,
         boxes=boxes,
         edges=edges,
-        legend_items=legend,
+        footnote="注：浅蓝框表示核心防御与受控生成模块；红色虚线框标示评价真值隔离边界（evaluation_only），仅离线指标重算可访问。",
     )
 
 
 def make_fig2_defense_flow() -> DiagramSpec:
+    """Compact left-to-right + branched decision flowchart for Combined defense & dual-branch detector."""
     boxes = [
-        Box("c_sem", 640, 290, 588, 340, "层 3：本地 LLM 双分支语义检测内部流程（PROMPT_VERSION = split-v6）", "gray", "container", 1.3, True, 11.5, True),
+        Box("c_sem", 542, 22, 476, 272, "层 3：双分支语义检测 (Qwen2.5-1.5B, split-v6, ≤32 tokens, 失败重试 1 次)", "container", "container", 1.1, True, 10.5),
 
-        Box("in_doc", 64, 92, 240, 66, "Top-5 检索候选文档 doc\n含 doc_id / text / source", "blue", "roundrect", 1.6, False, 12, True),
+        Box("in_d", 20, 74, 114, 56, "Top-5 候选文档\ndoc_id · text · source", "neutral", "roundrect", 1.2, False, 10.2),
 
-        Box("step1", 64, 198, 240, 68, "步骤 1：SHA-256 完整性校验\nverify(doc, manifest)", "orange", "roundrect", 2.2, False, 11.5),
-        Box("d1", 104, 304, 160, 74, "哈希校验状态？", "yellow", "diamond", 1.7, False, 11.5, True),
+        Box("s1", 162, 74, 126, 56, "① SHA-256 校验\nverify(doc, manifest)", "accent", "roundrect", 1.5, False, 10.2),
+        Box("d1", 180, 166, 90, 56, "哈希状态", "decision", "diamond", 1.3, False, 10.2),
 
-        Box("step2", 64, 422, 240, 68, "步骤 2：来源规则评估\nprovenance.assess(doc, registry)", "orange", "roundrect", 2.2, False, 11.5),
-        Box("d2", 104, 530, 160, 74, "来源是否可信\n且在白名单？", "yellow", "diamond", 1.7, False, 11.5, True),
+        Box("s2", 336, 74, 134, 56, "② 来源规则评估\nprovenance.assess", "accent", "roundrect", 1.5, False, 10.2),
+        Box("d2", 358, 166, 90, 56, "白名单?", "decision", "diamond", 1.3, False, 10.2),
 
-        Box("q_fast", 370, 304, 210, 74, "直接隔离 / 复核\n• fail → quarantine\n• missing → review\n（跳过 LLM 节省算力）", "red", "roundrect", 1.6, False, 11),
-        Box("r_prov", 370, 530, 210, 74, "转人工复核（review）\n• distro_wiki（已验证未列）\n• forum / blog / archive\n保守策略：不进上下文", "red", "roundrect", 1.6, False, 11),
+        # Semantic detector internals
+        Box("cache", 564, 74, 108, 56, "缓存命中?", "decision", "diamond", 1.2, False, 10.2),
+        Box("b1", 724, 52, 276, 56, "分支 1：行为指令判断\nattack(0.90) | unclear(0.55) | quoted(0.25) | none(0.02)", "accent", "roundrect", 1.4, False, 10),
+        Box("b2", 724, 126, 276, 56, "分支 2：事实一致性（仅读 text + trusted_ref）\ncontradicted(0.85) | insufficient(0.50) | supported(0.05)", "accent", "roundrect", 1.4, False, 10),
+        Box("agg", 564, 212, 436, 58, "风险聚合与写缓存：risk_score = max(s1, s2)\n键控：(prompt_ver + text + ref)；修复后仍失败则回退 review", "subtle", "roundrect", 1.2, False, 10.2),
 
-        # Right side: Semantic detector
-        Box("cache_d", 672, 336, 174, 72, "缓存命中？\n(prompt+text+ref)", "yellow", "diamond", 1.6, False, 11, True),
-        Box("br1", 896, 326, 306, 82, "分支 1：行为指令短调用（≤32 tokens）\n输出 {\"label\": attack | unclear | quoted | none}\n分值：0.90 / 0.55 / 0.25 / 0.02（失败重试 1 次）", "orange", "roundrect", 2.0, False, 10.8),
-        Box("br2", 896, 434, 306, 82, "分支 2：事实一致性短调用（≤32 tokens）\n输出 {\"label\": contradicted | insufficient | supported}\n分值：0.85 / 0.50 / 0.05（仅读 text + trusted_ref）", "orange", "roundrect", 2.0, False, 10.8),
-        Box("agg", 672, 540, 530, 66, "冻结风险聚合：risk_score = max(score_injection, score_fact)\n解析修复后仍失败则回退 review；结果写入 detector_cache.jsonl", "teal", "roundrect", 1.6, False, 11.2),
-
-        # Bottom decision & output
-        Box("d3", 548, 660, 200, 76, "risk_score 阈值判定\n≥0.70 / ≥0.40 / <0.40", "yellow", "diamond", 1.8, False, 11.5, True),
-        Box("out_block", 830, 666, 396, 66, "quarantine (≥0.70) 或 review (0.40–0.70)\n排除出生成上下文，写入审计日志（记入 FPR / 误伤统计）", "red", "roundrect", 1.6, False, 11),
-        Box("out_allow", 64, 666, 396, 66, "allow (<0.40)：进入受控生成上下文\n按 [doc_id] text 拼接（≤3600 字符）；若全空→程序拒答“证据不足”", "green", "roundrect", 1.8, False, 11, True),
+        # Bottom decision row
+        Box("d3", 718, 320, 128, 56, "阈值判定\n0.70 / 0.40", "decision", "diamond", 1.3, False, 10.2),
+        Box("allow", 654, 412, 256, 54, "放行 (allow, risk_score < 0.40)\n拼入 [doc_id] text 数据区；全空则拒答", "accent", "roundrect", 1.5, False, 10.2),
+        Box("block", 162, 326, 308, 140, "拦截并排除出生成上下文（保守策略）\n• 哈希 fail → quarantine（直接短路）\n• 哈希 missing → review\n• 来源未列 (distro_wiki) / 未知 / 伪冒 → review\n• 语义 risk_score ≥ 0.70 → quarantine\n• 语义 0.40 ≤ risk_score < 0.70 → review", "alert", "roundrect", 1.3, False, 10, align="left"),
     ]
 
     edges = [
-        Edge("e1", "in_doc", "step1", "", "#4E79A7", False, 1.6, "bottom", "top"),
-        Edge("e2", "step1", "d1", "", "#F28E2B", False, 1.6, "bottom", "top"),
-        Edge("e3", "d1", "q_fast", "fail / missing", "#E15759", False, 1.6, "right", "left"),
-        Edge("e4", "d1", "step2", "integrity_pass", "#59A14F", False, 1.6, "bottom", "top", label_offset=(48, 0)),
-        Edge("e5", "step2", "d2", "", "#F28E2B", False, 1.6, "bottom", "top"),
-        Edge("e6", "d2", "r_prov", "未列 / 未知 / 伪冒", "#E15759", False, 1.6, "right", "left"),
-        Edge("e7", "d2", "cache_d", "trusted allow", "#59A14F", False, 1.7, "bottom", "left", [(184, 624), (610, 624), (610, 372)], label_offset=(0, -10)),
-        Edge("e8", "cache_d", "br1", "未命中", "#F28E2B", False, 1.6, "right", "left"),
-        Edge("e9", "cache_d", "br2", "未命中", "#F28E2B", False, 1.6, "right", "left", [(868, 372), (868, 475)]),
-        Edge("e10", "cache_d", "agg", "缓存命中（0s）", "#59A14F", True, 1.6, "bottom", "top", [(759, 540)], label_offset=(54, 0)),
-        Edge("e11", "br1", "agg", "", "#F28E2B", False, 1.5, "right", "top", [(1216, 367), (1216, 526), (1050, 526)]),
-        Edge("e12", "br2", "agg", "", "#F28E2B", False, 1.5, "bottom", "top", [(1049, 540)]),
-        Edge("e13", "agg", "d3", "输出风险分", "#495057", False, 1.7, "bottom", "top", [(937, 642), (648, 642)]),
-        Edge("e14", "d3", "out_block", "≥ 0.40 拦截", "#E15759", False, 1.7, "right", "left"),
-        Edge("e15", "d3", "out_allow", "< 0.40 放行", "#59A14F", False, 1.8, "left", "right"),
+        Edge("e1", "in_d", "s1", "", "#343A40", False, 1.2, "right", "left"),
+        Edge("e2", "s1", "d1", "", "#2C5282", False, 1.2, "bottom", "top"),
+        Edge("e3", "d1", "block", "fail / missing", "#9B2C2C", False, 1.2, "bottom", "top", [(225, 306), (316, 306)], label_offset=(42, 0), label_seg=0),
+        Edge("e4", "d1", "s2", "pass", "#2C5282", False, 1.3, "right", "left", [(308, 194), (308, 102)], label_offset=(-18, -8), label_seg=0),
+        Edge("e5", "s2", "d2", "", "#2C5282", False, 1.2, "bottom", "top"),
+        Edge("e6", "d2", "block", "否 (review)", "#9B2C2C", False, 1.2, "bottom", "top", [(403, 306), (316, 306)], label_offset=(36, 0), label_seg=0),
+        Edge("e7", "d2", "cache", "trusted", "#2C5282", False, 1.3, "right", "left", [(504, 194), (504, 102)], label_offset=(-20, -8), label_seg=0),
+        Edge("e8", "cache", "b1", "未命中", "#2C5282", False, 1.2, "right", "left", [(698, 102), (698, 80)], label_offset=(-8, -10), label_seg=0),
+        Edge("e9", "cache", "b2", "", "#2C5282", False, 1.2, "right", "left", [(698, 102), (698, 154)]),
+        Edge("e10", "cache", "agg", "命中 (0 s)", "#495057", True, 1.2, "bottom", "top", [(618, 196), (782, 196)], label_offset=(34, 0), label_seg=0),
+        Edge("e11", "b1", "agg", "", "#2C5282", False, 1.1, "right", "top", [(1009, 80), (1009, 196), (782, 196)]),
+        Edge("e12", "b2", "agg", "", "#2C5282", False, 1.1, "bottom", "top", [(862, 196), (782, 196)]),
+        Edge("e13", "agg", "d3", "", "#343A40", False, 1.2, "bottom", "top"),
+        Edge("e14", "d3", "block", "≥ 0.40", "#9B2C2C", False, 1.3, "left", "right", [(594, 348), (594, 396)], label_offset=(0, -8), label_seg=0),
+        Edge("e15", "d3", "allow", "< 0.40", "#2C5282", False, 1.4, "bottom", "top", label_offset=(26, 0)),
     ]
 
-    legend = [
-        ("blue", "候选文档输入", False),
-        ("orange", "核心校验 / 检测步骤", False),
-        ("yellow", "条件分支与阈值判断", False),
-        ("teal", "风险聚合与缓存机制", False),
-        ("green", "放行进入受控上下文", False),
-        ("red", "隔离 / 复核排除", False),
-    ]
     return DiagramSpec(
         slug="fig2_defense_decision_flow",
-        title="图 2  组合防护（Combined）与双分支语义检测决策流程图",
-        subtitle="顺序拦截（哈希 → 来源 → 本地 1.5B 双分支短 JSON 检测）与冻结阈值决策规则",
-        width=1280,
-        height=790,
+        name="图2_组合防护决策流程",
+        width=1040,
+        height=498,
         boxes=boxes,
         edges=edges,
-        legend_items=legend,
+        footnote="注：组合防护采用顺序短路策略，仅前一层放行（allow）的候选文档才进入本地 1.5B 语义检测；所有阈值均在实验前写入配置冻结。",
     )
 
 
 def make_fig3_threat_model() -> DiagramSpec:
+    """Two-lane academic comparison of post_ingestion vs pre_ingestion threat models."""
     boxes = [
-        Box("c_atk", 28, 80, 346, 528, "攻击者能力边界与投毒载荷", "gray", "container", 1.2, True, 12, True),
-        Box("c_post", 404, 80, 848, 250, "场景 A：post_ingestion（入库建基线后发生篡改）", "green", "container", 1.4, True, 12, True),
-        Box("c_pre", 404, 358, 848, 250, "场景 B：pre_ingestion（投毒发生在基线建立之前）", "red", "container", 1.4, True, 12, True),
+        Box("c_atk", 20, 18, 250, 368, "攻击者能力与投毒载荷", "container", "container", 1.0, True, 10.5),
+        Box("c_post", 294, 18, 706, 172, "(a) post_ingestion：入库建基线后篡改", "container", "container", 1.0, True, 10.5),
+        Box("c_pre", 294, 214, 706, 172, "(b) pre_ingestion：入库前供应链投毒", "container", "container", 1.0, True, 10.5),
 
         # Attacker column
-        Box("atk_cap", 48, 124, 306, 114, "攻击假设（恒定语料规模 400）\n• 替换同 doc_id 正常文档（5%/10%/20%）\n• 可伪造声明式 source（如 man_pages）\n• 不可篡改已落盘基线清单与评价真值", "red", "roundrect", 1.7, False, 11, align="left"),
-        Box("atk_inj", 48, 266, 306, 110, "载荷类型 1：提示注入（100 条）\n• I1 定向改写答案指令\n• I2 诱导输出哨兵 RAG_POISON_999\n伪装为技术备注或系统提示", "orange", "roundrect", 1.8, False, 11, align="left"),
-        Box("atk_fact", 48, 404, 306, 110, "载荷类型 2：错误技术事实（100 条）\n• F1 / F2 颠倒 Linux 系统调用语义\n（如 fork 返回值、SIGKILL 可捕获等）\n无显式攻击指令，规则词难以拦截", "orange", "roundrect", 1.8, False, 11, align="left"),
-        Box("atk_iso", 48, 534, 306, 56, "安全边界：攻击者无法触达 evaluation_only", "boundary", "roundrect", 1.8, True, 11, True),
+        Box("a1", 36, 56, 218, 78, "恒定规模同 ID 替换\n语料恒为 400 条 (5% / 10% / 20%)\n可伪造声明式 source 字段", "neutral", "roundrect", 1.2, False, 10.2, align="left"),
+        Box("a2", 36, 152, 218, 74, "提示注入载荷 (100 条)\nI1：定向改写技术结论\nI2：诱导输出哨兵 RAG_POISON_999", "alert", "roundrect", 1.2, False, 10.2, align="left"),
+        Box("a3", 36, 244, 218, 74, "错误技术事实 (100 条)\nF1 / F2：颠倒 Linux 系统调用语义\n无显式指令词，关键词规则难拦截", "alert", "roundrect", 1.2, False, 10.2, align="left"),
+        Box("a4", 36, 334, 218, 36, "约束：不可篡改已落盘基线与评价真值", "boundary", "roundrect", 1.2, True, 9.8, bold_first=False),
 
         # Post-ingestion lane
-        Box("p1", 426, 134, 168, 82, "1. 干净语料入库\n400 条正常文档", "blue", "roundrect", 1.5, False, 11.5),
-        Box("p2", 626, 134, 178, 82, "2. 先建 SHA-256 基线\n记录干净文本摘要", "green", "cylinder", 1.6, False, 11.5),
-        Box("p3", 836, 134, 178, 82, "3. 攻击者替换文档\n文本字节改变\n（同 doc_id 替换）", "red", "roundrect", 1.7, False, 11.5),
-        Box("p4", 1046, 124, 184, 104, "4. 完整性校验结果\n100% 检出篡改\n16/16 · 28/28 · 55/55\nASR = 0（无需语义层）", "green", "roundrect", 2.0, False, 11, True),
-        Box("p_note", 426, 244, 804, 62, "关键结论（post_ingestion）：哈希校验对“入库后字节级篡改”零漏报、低开销；20% 投毒下 integrity 组正确率 83.3%（vs baseline 37.5%）。", "teal", "roundrect", 1.2, False, 11),
+        Box("p1", 314, 68, 132, 60, "1. 干净语料入库\n400 条正常文档", "neutral", "roundrect", 1.2, False, 10.2),
+        Box("p2", 476, 68, 140, 60, "2. 建立基线清单\n记录干净 SHA-256", "subtle", "cylinder", 1.2, False, 10.2),
+        Box("p3", 646, 68, 140, 60, "3. 攻击者替换文档\n字节改变 (同 doc_id)", "alert", "roundrect", 1.3, False, 10.2),
+        Box("p4", 816, 62, 166, 72, "4. 哈希检出 100%\n16/16 · 28/28 · 55/55\nASR = 0（正确率 83.3%）", "accent", "roundrect", 1.5, False, 10.2),
+        Box("pn", 314, 148, 668, 28, "结论：字节级哈希对入库后篡改零漏报且低开销，但无法验证入库前内容真实性。", "note", "note", 0, False, 9.8, bold_first=False, align="left"),
 
         # Pre-ingestion lane
-        Box("r1", 426, 412, 168, 82, "1. 投毒文档混入\n同 doc_id 替换\n（含伪造 man_pages）", "red", "roundrect", 1.7, False, 11.2),
-        Box("r2", 626, 412, 178, 82, "2. 后建 SHA-256 基线\n基线已包含投毒文本\n哈希校验检出率 0%", "yellow", "cylinder", 1.7, False, 11.2),
-        Box("r3", 836, 412, 178, 82, "3. 来源 + 语义联防\n来源拦截 31/55 未知源\n语义拦截 24/55 伪造源", "orange", "roundrect", 2.2, False, 11.2),
-        Box("r4", 1046, 402, 184, 104, "4. 防护结果与代价\nASR(被攻击) 65% → 0%\n代价：14 条正常\ndistro_wiki 被转复核", "green", "roundrect", 1.8, False, 11, True),
-        Box("r_note", 426, 522, 804, 62, "关键结论（pre_ingestion）：SHA-256 无法发现入库前投毒（integrity 组与 baseline 完全一致，ASR 65%）；必须依赖来源与内容级语义检测互补。", "boundary", "roundrect", 1.4, True, 11),
+        Box("r1", 314, 258, 132, 62, "1. 投毒文档混入\n含伪造 man_pages", "alert", "roundrect", 1.3, False, 10.2),
+        Box("r2", 476, 258, 140, 62, "2. 后建基线清单\n基线含投毒文本", "subtle", "cylinder", 1.2, False, 10.2),
+        Box("r3", 646, 258, 140, 62, "3. 哈希检出 0%\nintegrity 组退化为\nbaseline (ASR 65%)", "alert", "roundrect", 1.3, True, 10.2),
+        Box("r4", 816, 252, 166, 74, "4. 来源 + 语义互补\n来源 31/55 · 语义 24/55\nASR = 0（14 正常转复核）", "accent", "roundrect", 1.5, False, 10.2),
+        Box("rn", 314, 340, 668, 30, "结论：入库前投毒必须依赖来源规则与语义检测互补拦截；保守来源白名单带来覆盖率代价。", "note", "note", 0, False, 9.8, bold_first=False, align="left"),
     ]
 
     edges = [
-        Edge("e1", "p1", "p2", "", "#4E79A7", False, 1.6, "right", "left"),
-        Edge("e2", "p2", "p3", "入库后篡改", "#E15759", False, 1.6, "right", "left"),
-        Edge("e3", "p3", "p4", "SHA-256 失败", "#59A14F", False, 1.8, "right", "left"),
-        Edge("e4", "r1", "r2", "", "#E15759", False, 1.6, "right", "left"),
-        Edge("e5", "r2", "r3", "哈希全部放行", "#D4A017", False, 1.6, "right", "left"),
-        Edge("e6", "r3", "r4", "全部隔离", "#59A14F", False, 1.8, "right", "left"),
-        Edge("e7", "atk_inj", "p3", "注入载荷", "#E15759", True, 1.4, "right", "top", [(388, 321), (388, 108), (925, 108)]),
-        Edge("e8", "atk_fact", "r1", "投毒入库", "#E15759", True, 1.5, "right", "left", [(388, 459), (388, 453)]),
+        Edge("e1", "p1", "p2", "", "#343A40", False, 1.2, "right", "left"),
+        Edge("e2", "p2", "p3", "", "#9B2C2C", False, 1.2, "right", "left"),
+        Edge("e3", "p3", "p4", "fail", "#2C5282", False, 1.3, "right", "left"),
+        Edge("e4", "r1", "r2", "", "#343A40", False, 1.2, "right", "left"),
+        Edge("e5", "r2", "r3", "pass", "#9B2C2C", False, 1.2, "right", "left"),
+        Edge("e6", "r3", "r4", "联防", "#2C5282", False, 1.3, "right", "left"),
+        Edge("e7", "a2", "p3", "", "#9B2C2C", True, 1.1, "right", "top", [(282, 189), (282, 50), (716, 50)]),
+        Edge("e8", "a3", "r1", "", "#9B2C2C", True, 1.1, "right", "left", [(282, 281), (282, 289)]),
     ]
 
-    legend = [
-        ("blue", "正常语料状态", False),
-        ("red", "攻击 / 投毒篡改", False),
-        ("yellow", "基线失效状态（pre）", False),
-        ("orange", "载荷与核心防御层", False),
-        ("green", "成功检出与阻断", False),
-        ("boundary", "核心安全边界提示", True),
-    ]
     return DiagramSpec(
         slug="fig3_threat_model_scenes",
-        title="图 3  威胁模型与入库前后（Pre vs Post Ingestion）投毒对照流程图",
-        subtitle="受控对照实验设计：区分字节级篡改（post）与供应链入库前污染（pre）对三层防护的不同可观测性",
-        width=1280,
-        height=670,
+        name="图3_威胁模型与场景对照",
+        width=1020,
+        height=416,
         boxes=boxes,
         edges=edges,
-        legend_items=legend,
+        footnote="注：图中括号内计数（55/55、31/55、24/55）对应 20% 投毒比例下 24 道冻结查询实际检索到的恶意文档总数。",
     )
 
 
 def make_fig4_evolution() -> DiagramSpec:
+    """Clean 2-row 6-stage scientific iteration & failure-driven pivot diagram."""
     boxes = [
-        Box("s1", 36, 98, 286, 174, "阶段 1：正式轮四组对照（10/27）\n768 查询 + 1200 文档全语料评价\n• 组合防护 ASR 65% → 0%\n• 检测器 P=0.976 / R=1.000 / FPR=0.63%\n• 暴露问题：组合组 20% 投毒正确率\n  降至 66.7%（14 条 distro_wiki 误伤）", "blue", "roundrect", 1.7, False, 11, align="left"),
-        Box("s2", 364, 98, 286, 174, "阶段 2：证据粒度四条件消融（10/29）\n97 开发题 × 4 条件 = 388 条推理\n• 句子不滤 42 / 句子过滤 47\n• 段落不滤 67 / 段落过滤 72\n  （原 AI 暂判口径）\n• 结论：完整段落显著优于断句抽取", "orange", "roundrect", 2.0, False, 11, align="left"),
-        Box("s3", 692, 98, 286, 174, "阶段 3：API 挑战与 GPT-6 复核（10/29–30）\n8 事实簇 × 7 场景 = 56 题 × 4 = 224 条\n• GPT-6 联合口径：段落不滤 27/56\n  > 段落过滤 22/56\n• 明确失败：全文禁止词过滤误伤\n  8/8 合法引用攻击样例的正确文档", "orange", "roundrect", 2.0, False, 11, align="left"),
-        Box("s4", 1020, 98, 264, 174, "阶段 4：语义门控 v1（10/30）\n【负面实验 · 诚实止损】\n153 记录（133 次额外调用）\n• 133/133 全部被拒（覆盖率 0%）\n• 24 次正负/编码/解码诊断确认\n  不可仅归因于约束解码 → 不并入默认", "red", "roundrect", 2.2, False, 11, align="left"),
+        Box("s1", 20, 22, 286, 134, "阶段 1：正式轮四组对照（768 查询）\n• 组合防护将 ASR 由 0.650 压至 0.000\n• 检测器 P=0.976 / R=1.000 / FPR=0.63%\n• 暴露：14 条 distro_wiki 转复核致正确率 −16.7%", "neutral", "roundrect", 1.2, False, 10.2, align="left"),
+        Box("s2", 386, 22, 286, 134, "阶段 2：证据粒度四条件消融（388 条）\n• 97 开发题对比句子抽取与完整段落\n• 原开发 AI 暂判：句子 42/47 vs 段落 67/72\n• 结论：完整段落避免撕裂条件，净增 +25 题", "neutral", "roundrect", 1.2, False, 10.2, align="left"),
+        Box("s3", 752, 22, 286, 134, "阶段 3：API 挑战与 GPT-6 复核（224 条）\n• 8 事实簇 × 7 场景 = 56 题（98 项复核）\n• 联合口径：段落不滤 27/56 > 过滤 22/56\n• 失败：全文过滤误杀 8/8 合法引用样例", "neutral", "roundrect", 1.2, False, 10.2, align="left"),
 
-        # Bottom row: Stage 5 + Review + Freeze
-        Box("s5", 36, 344, 412, 198, "阶段 5：BGE-reranker-v2-m3 重排与句界标记（10/30）\n• 阶段 5a（40 对相关性校准）：局部阈值 1.275 通过 8/8 正例与 4/4 无关负例，\n  但仅复述问题（8/8，分值 10.65–10.82）与错误事实（6/8）同样高分通过\n  → 禁止把相关性阈值当证据充分性或事实可靠门槛\n• 阶段 5b（153 题 × 4 组 = 612 条生成）：完成基线 / 重排 / 标记 / 重排+标记实测", "orange", "roundrect", 2.0, False, 11, align="left"),
-        Box("s6", 494, 344, 388, 198, "阶段 5c：44 项补充复核与哈希核验\n• 逐项核对 Linux man-pages 与内核文档，回填 73 条新回答，\n  612 条记录全部有状态（verify_rerank_review.py 通过）\n• 混合核心口径（两集分开，不混算总准确率）：\n  - 开发 97 题：基线 67 / 重排 66 / 标记 65 / 重排+标记 66\n  - API 56 题：基线 27 / 重排 29 / 标记 25 / 重排+标记 32", "teal", "roundrect", 1.7, False, 11, align="left"),
-        Box("s7", 928, 344, 356, 198, "最终工程决策与开源发布冻结\n• 默认方案：保留完整段落证据 + 三层可审计流水线\n• 优先候选：重排+标记（API +5 且 0 回归，待做顺序/裁剪消融）\n• 显式排除：全局禁止词过滤、语义门控 v1、相关性硬拒答\n• 复现保障：64 项单元测试通过 + SHA-256 哈希核验\n• 后续扩展：冻结方法后新建 ≥24 个未见事实簇评测", "green", "roundrect", 2.0, False, 11, align="left"),
-
-        Box("note_bar", 36, 568, 1248, 52, "方法论原则：严格分口径报告（规则评分 / 原 AI 暂判 / GPT-6 事后联合口径 / 模型辅助溯源补评），已暴露数据仅作开发诊断，不宣称未见数据泛化。", "boundary", "roundrect", 1.5, True, 11.2, True),
+        Box("s4", 20, 206, 286, 144, "阶段 4：语义门控 v1（153 条 · 负面实验）\n• 133 次 1.5B 调用全部拒答（覆盖率 0%）\n• 24 次正负/反转编码/自由解码诊断确认\n  非单纯约束解码问题 → 止损不并入默认", "alert", "roundrect", 1.4, True, 10.2, align="left"),
+        Box("s5", 386, 206, 286, 144, "阶段 5：BGE 重排与句界标记（612 条）\n• 40 对探针：复述 8/8、错事实 6/8 过高分\n  → 禁止相关性阈值作充分性/事实门槛\n• 44 项补评：API 32/56 (+5/0退)，开发 66/97", "neutral", "roundrect", 1.2, False, 10.2, align="left"),
+        Box("s6", 752, 206, 286, 144, "最终工程冻结决策\n• 默认：三层可审计筛查 + 完整段落\n• 优先候选：重排+标记（待做 2×2 因子消融）\n• 排除：全局禁止词 / 语义门控 v1 / 硬阈值\n• 后续：新建 ≥24 个未见事实簇验证", "accent", "roundrect", 1.6, False, 10.2, align="left"),
     ]
 
     edges = [
-        Edge("e1", "s1", "s2", "诊断覆盖率下降", "#4E79A7", False, 1.7, "right", "left"),
-        Edge("e2", "s2", "s3", "压力测试验证", "#F28E2B", False, 1.7, "right", "left"),
-        Edge("e3", "s3", "s4", "尝试小模型自审", "#E15759", False, 1.7, "right", "left"),
-        Edge("e4", "s4", "s5", "止损转向专用重排", "#E15759", True, 1.8, "bottom", "top", [(1152, 308), (242, 308)], label_offset=(0, -10)),
-        Edge("e5", "s5", "s6", "补齐 73 条新回答状态", "#F28E2B", False, 1.7, "right", "left"),
-        Edge("e6", "s6", "s7", "哈希核验与方案冻结", "#59A14F", False, 1.8, "right", "left"),
+        Edge("e1", "s1", "s2", "诊断覆盖率", "#343A40", False, 1.2, "right", "left"),
+        Edge("e2", "s2", "s3", "压力测试", "#343A40", False, 1.2, "right", "left"),
+        Edge("e3", "s3", "s4", "尝试语义门控", "#9B2C2C", False, 1.2, "bottom", "top", [(895, 182), (163, 182)], label_offset=(0, -8), label_seg=1),
+        Edge("e4", "s4", "s5", "止损转向重排", "#9B2C2C", True, 1.2, "right", "left"),
+        Edge("e5", "s5", "s6", "核验冻结", "#2C5282", False, 1.4, "right", "left"),
     ]
 
-    legend = [
-        ("blue", "基线与正式轮实验", False),
-        ("orange", "核心消融与迭代优化", False),
-        ("red", "负面实验与失败止损", False),
-        ("teal", "溯源补评与哈希核验", False),
-        ("green", "冻结交付决策", False),
-        ("boundary", "评测口径与数据边界原则", True),
-    ]
     return DiagramSpec(
         slug="fig4_experiment_evolution_flow",
-        title="图 4  五阶段实验演进、负面诊断与工程冻结闭环流程图",
-        subtitle="以失败驱动迭代：从正式轮（768 条）到段落消融（388 条）、API 挑战（224 条）、语义门控失败（153 条）与 BGE 重排消融（612 条）",
-        width=1320,
-        height=680,
+        name="图4_五阶段实验演进与决策闭环",
+        width=1058,
+        height=388,
         boxes=boxes,
         edges=edges,
-        legend_items=legend,
+        footnote="注：不同阶段的数据集与裁判口径（规则评分 / 原开发 AI 暂判 / GPT-6 事后联合口径 / 模型辅助溯源补评）严格分开统计，不跨表混算。",
     )
 
 
 def validate_no_foreground_overlap(spec: DiagramSpec) -> None:
-    fg = [b for b in spec.boxes if b.shape != "container"]
+    fg = [b for b in spec.boxes if b.shape not in ("container", "note")]
     for i in range(len(fg)):
         for j in range(i + 1, len(fg)):
             a, b = fg[i], fg[j]
-            overlap_x = min(a.x + a.w, b.x + b.w) - max(a.x, b.x)
-            overlap_y = min(a.y + a.h, b.y + b.h) - max(a.y, b.y)
-            if overlap_x > 0 and overlap_y > 0:
-                raise AssertionError(f"[{spec.slug}] Box overlap between {a.id} and {b.id}: {overlap_x}x{overlap_y}")
+            ox = min(a.x + a.w, b.x + b.w) - max(a.x, b.x)
+            oy = min(a.y + a.h, b.y + b.h) - max(a.y, b.y)
+            if ox > 0 and oy > 0:
+                raise AssertionError(f"[{spec.slug}] Box overlap between {a.id} and {b.id}: {ox}x{oy}")
 
 
 def main() -> int:
@@ -757,16 +613,13 @@ def main() -> int:
     for spec in specs:
         validate_no_foreground_overlap(spec)
         drawio_xml = build_drawio_xml(spec)
-        # Verify XML is strictly well-formed
         ET.fromstring(drawio_xml)
-        drawio_path = OUT_DIR / f"{spec.slug}.drawio"
-        drawio_path.write_text(drawio_xml, encoding="utf-8")
+        (OUT_DIR / f"{spec.slug}.drawio").write_text(drawio_xml, encoding="utf-8")
 
         svg_xml = build_svg(spec)
         ET.fromstring(svg_xml)
-        svg_path = OUT_DIR / f"{spec.slug}.svg"
-        svg_path.write_text(svg_xml, encoding="utf-8")
-        print(f"Generated: {drawio_path.relative_to(ROOT)} & {svg_path.relative_to(ROOT)}")
+        (OUT_DIR / f"{spec.slug}.svg").write_text(svg_xml, encoding="utf-8")
+        print(f"Generated: docs/diagrams/{spec.slug}.drawio & .svg ({spec.width}x{spec.height})")
     return 0
 
 
