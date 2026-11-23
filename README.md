@@ -4,8 +4,10 @@
 [![Python 3.10–3.12](https://img.shields.io/badge/Python-3.10--3.12-59A14F.svg)](requirements.txt)
 [![Tests: 64 passed](https://img.shields.io/badge/pytest-64%20passed-59A14F.svg)](tests/)
 [![Domain: RAG Security](https://img.shields.io/badge/Domain-RAG%20Security-F28E2B.svg)](docs/EVALUATION_REPORT.md)
+[![Demo Video: 2m35s](https://img.shields.io/badge/Demo%20Video-2m35s-1D3557.svg)](https://github.com/loveyxy1314/rag-trust-demo/releases/download/v1.0.0/default.mp4)
 
-> 面向 Linux 系统编程知识库的端到端可审计 RAG 投毒防御与评测原型。全部核心模块、单元测试与离线审计链路均可在无 GPU 的 CPU 环境下直接复现；正式 GPU 推理日志（AMD Radeon AI PRO R9700 / ROCm 7.13）与 SHA-256 哈希核验记录随库公开。
+> 面向 Linux 系统编程知识库的端到端可审计 RAG 投毒防御与评测原型。全部核心模块、单元测试与离线审计链路均可在无 GPU 的 CPU 环境下直接复现；正式 GPU 推理日志（AMD Radeon AI PRO R9700 / ROCm 7.13）与 SHA-256 哈希核验记录随库公开。  
+> **端到端演示视频（2 分 35 秒）**：[在线下载 / 播放 MP4](https://github.com/loveyxy1314/rag-trust-demo/releases/download/v1.0.0/default.mp4) ｜ [GitHub Release v1.0.0 页面](https://github.com/loveyxy1314/rag-trust-demo/releases/tag/v1.0.0)（覆盖源码下载、依赖安装、`pytest` 64 项通过、场景 A/B 实时演示与 SHA-256 核验）。
 
 ---
 
@@ -245,8 +247,9 @@ python scripts/run_experiments.py --groups baseline integrity llm_detector combi
 
 ---
 
-## 六、相关文档与开源许可
+## 六、相关文档、演示视频与开源许可
 
+- **端到端演示视频（2 分 35 秒）**：[`default.mp4` 直链](https://github.com/loveyxy1314/rag-trust-demo/releases/download/v1.0.0/default.mp4)（[Release v1.0.0](https://github.com/loveyxy1314/rag-trust-demo/releases/tag/v1.0.0)）
 - **跨环境复现记录**：[`docs/REPRODUCIBILITY.md`](docs/REPRODUCIBILITY.md)
 - **详细部署手册**：[`docs/DEPLOYMENT.md`](docs/DEPLOYMENT.md)
 - **综合评测报告**：[`docs/EVALUATION_REPORT.md`](docs/EVALUATION_REPORT.md)
